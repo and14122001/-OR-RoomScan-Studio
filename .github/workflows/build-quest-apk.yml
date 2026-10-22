@@ -39,7 +39,6 @@ jobs:
           buildsPath: build
           buildName: ORRoomScanStudio
           allowDirtyBuild: true
-          customParameters: -executeMethod ORRoomScanBuild.BuildAndroid
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
