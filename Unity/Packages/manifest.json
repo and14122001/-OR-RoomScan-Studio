@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "com.genesis.roomscan": "https://github.com/genesisinteractive/QuestRoomScan.git#v1.3.2",
+    "com.unity.xr.arfoundation": "6.1.0",
+    "com.unity.render-pipelines.universal": "17.0.3",
+    "com.unity.burst": "1.8.18",
+    "com.unity.collections": "2.4.3",
+    "com.unity.mathematics": "1.3.2",
+    "com.unity.inputsystem": "1.11.2",
+    "com.unity.ugui": "2.0.0"
+  }
+}
