@@ -26,7 +26,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/INTEGRATION_MAP.md](docs
 - [Meta Scene API](https://developers.meta.com/vr/design/mr-health-scene/)
 
 ## Current status
-Planning and scaffolding only. Third-party dependencies are not vendored. The QuestRoomScan adapter, Meta Depth API wiring, CAD import/registration, exporters, and device validation remain to be implemented.
+Early Unity project baseline committed: QuestRoomScan is pinned to `v1.3.2`, a runtime controller calls its documented scan/save/load facade, and a manual Android APK workflow is present. This is **not yet a verified APK**: Meta XR/OpenXR setup, the RoomScan Game-Ready scene wizard, Unity package resolution, Android compilation, and Quest 3 device tests remain unverified. CAD import/registration, deviation heatmap, DXF/PDF export, and measurement validation also remain to be implemented. See [docs/BUILD_STATUS.md](docs/BUILD_STATUS.md) for the exact blockers and handoff checklist.
 
 ## License
 No project license has been selected yet. Do not assume this repository is open for reuse until a license is added. Third-party dependencies retain their own licenses.
