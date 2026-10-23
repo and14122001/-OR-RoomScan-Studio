@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Genesis.RoomScan;
 
@@ -40,6 +41,18 @@ public static class ORRoomScanBuild
                     ? UnityEditor.SceneManagement.OpenSceneMode.Single
                     : UnityEditor.SceneManagement.OpenSceneMode.Additive);
         }
+
+        // FinalizeScanAsync requires the native xatlas Android ARM64 plugin.
+        // Resolve the package path through UPM instead of assuming PackageCache layout.
+        var qrsPackage = PackageInfo.FindForAssetPath(
+            "Packages/com.genesis.roomscan/Runtime/Utils/RoomScanSession.cs");
+        if (qrsPackage == null)
+            throw new BuildFailedException("QuestRoomScan package path could not be resolved by Unity Package Manager.");
+        string xatlasAndroid = Path.Combine(
+            qrsPackage.resolvedPath, "Runtime/Plugins/Android/libxatlas.so");
+        if (!File.Exists(xatlasAndroid))
+            throw new BuildFailedException(
+                "QuestRoomScan Android xatlas plugin is missing. Open RoomScan > Setup Scene, use the NATIVE PLUGINS section > Build xatlas Plugin, and wait until Runtime/Plugins/Android/libxatlas.so exists before rebuilding.");
 
         // Validate the assembled build scene set after all scenes are loaded.
         var session = UnityEngine.Object.FindFirstObjectByType<RoomScanSession>();
