@@ -11,8 +11,8 @@
 2. Let Package Manager resolve packages. Resolve any version conflict before proceeding; do not silently upgrade QuestRoomScan.
 3. Install the Meta XR SDK / Meta OpenXR packages using Meta's official installation flow. The QuestRoomScan README lists `com.unity.xr.meta-openxr`, `com.unity.xr.openxr`, and `com.meta.xr.sdk.core` as additional project-level dependencies.
 4. In the Unity menu, open **RoomScan > Setup Scene** and run **Apply Game-Ready Setup**. After the build-target/domain reload, run it again if prompted. This wizard configures Quest build settings, URP, passthrough, scene support, anchors and permissions.
-5. Add `RoomScanRuntimeController` to the generated `RoomScan` root or another active scene object.
-6. Set Android as the build platform, select ARM64 / IL2CPP and build an APK. Connect Quest 3 with Developer Mode and USB debugging enabled; install the APK using Build And Run or Android Platform Tools.
+5. Run **OR RoomScan > Attach Runtime Controller To Active Scene**. This attaches the app HUD/controller to the generated `RoomScanSession` object and saves the active scene.
+6. Add that scene to **File > Build Profiles/Build Settings > Scenes**. Set Android as the build platform, ARM64 / IL2CPP, and build an APK. You can also run the GitHub Actions workflow after configuring Unity licensing secrets. Connect Quest 3 with Developer Mode and USB debugging enabled; install the APK using Build And Run or Android Platform Tools.
 
 ## Runtime controls
 The prototype controller uses XR controller primary/secondary buttons as Start Scan / Finalize & Save. A saved scan can be loaded on app launch. Confirm bindings on-device; this input layer is intentionally small and does not replace the vendor debug menu.
