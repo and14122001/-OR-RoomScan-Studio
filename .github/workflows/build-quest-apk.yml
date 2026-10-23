@@ -14,6 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Run repository preflight
+        run: python3 tools/validate_project.py
+
       - name: Check required Unity license secrets
         shell: bash
         env:
