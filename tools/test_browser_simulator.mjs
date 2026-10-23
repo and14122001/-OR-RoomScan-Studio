@@ -9,7 +9,7 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
@@ -40,3 +40,24 @@ assert.ok(scriptMatch[1].includes("['embedded','cabinet','counter','other'].incl
 assert.ok(scriptMatch[1].includes("o.x+o.w<=room.w+1e-6"), "fixture dimensions are validated against room boundaries");
 assert.ok(html.includes("不會自動猜測"), "fixture measurements are explicitly user-provided");
 console.log("PASS: fixture/cabinet model UI, bounds validation, room rendering, and session persistence checks.");
+
+assert.ok(scriptMatch[1].includes("function parseClosedDxfPolylines"), "DXF closed-polyline parser exists");
+assert.ok(scriptMatch[1].includes("geometry:'cad-prism'"), "DXF footprints are saved as 3D prism models");
+assert.ok(scriptMatch[1].includes("sourceLayer:s.layer"), "CAD source layer is preserved in model metadata");
+const parserMatch = scriptMatch[1].match(/const DXF_UNIT_SCALE=\{[^}]+\};\s*function parseClosedDxfPolylines[\s\S]*?\n\}/);
+assert.ok(parserMatch, "DXF parser source can be isolated for functional testing");
+const dxfMath = {};
+vm.runInNewContext(parserMatch[0] + "\ndxfMath.parse=parseClosedDxfPolylines; dxfMath.scale=DXF_UNIT_SCALE;", dxfMath);
+const sampleDxf = [
+  "0","SECTION","2","ENTITIES","0","LWPOLYLINE","8","CABINET",
+  "70","1","10","0","20","0","10","1000","20","0",
+  "10","1000","20","600","10","0","20","600","0","ENDSEC","0","EOF",""
+].join("\n");
+const parsed = dxfMath.parse(sampleDxf, dxfMath.scale.mm);
+assert.equal(parsed.length, 1, "one closed cabinet outline should parse");
+assert.ok(Math.abs(parsed[0].w - 1) < 1e-9, "DXF mm width converts to 1 m");
+assert.ok(Math.abs(parsed[0].d - 0.6) < 1e-9, "DXF mm depth converts to 0.6 m");
+assert.equal(parsed[0].vertices.length, 4, "closed rectangle has four footprint vertices");
+assert.equal(parsed[0].layer, "CABINET", "DXF layer metadata is retained");
+assert.throws(() => dxfMath.parse("0\nSECTION\n2\nENTITIES\n0\nENDSEC\n0\nEOF", 0.001), /找不到有效封閉/, "rejects DXF with no closed polyline");
+console.log("PASS: DXF closed-polyline parsing, mm-to-m conversion, footprint vertices, layer metadata, and invalid-file rejection.");
