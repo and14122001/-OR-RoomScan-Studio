@@ -48,7 +48,7 @@ canvas.addEventListener('pointermove',e=>{if(drag<0)return;const p=pointer(e),ba
 function endDrag(){if(drag>=0)log('量測點已移動。模擬座標已更新；不代表真實感測量測。');drag=-1;draw()}canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
 function download(name,content,type){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function snapshot(){return{schemaVersion:1,simulationOnly:true,units:'m',room:{...room},points:points.map(p=>({...p})),scanProgress:scan,savedAt:new Date().toISOString()}}
-function startScan(){if(running)return;running=true;scan=0;last=0;$('start').disabled=true;log('開始模擬掃描；此流程不讀取真實相機或深度感測器。');tick()}
+function startScan(){if(running)return;running=true;scan=0;last=0;$('start').disabled=true;log('開始模擬掃描；此流程不讀取真實相機或深度感測器。');raf=requestAnimationFrame(tick)}
 function tick(t){if(!running)return;if(!last)last=t;scan=Math.min(100,Math.floor((t-last)/35));$('scanPct').textContent=scan+'%';$('bar').style.width=scan+'%';draw();if(scan>=100){running=false;$('start').disabled=false;log('模擬掃描完成。資料僅為合成幾何，尚未產生 Quest 感測資料。');return}raf=requestAnimationFrame(tick)}
 $('apply').onclick=()=>{if(validDims()){renderPoints();draw();log('房間尺寸更新；體積 '+volume().toFixed(3)+' m³。')}};
 $('start').onclick=startScan;$('finish').onclick=()=>{running=false;cancelAnimationFrame(raf);$('start').disabled=false;log('已停止模擬掃描，進度 '+scan+'%。');draw()};
