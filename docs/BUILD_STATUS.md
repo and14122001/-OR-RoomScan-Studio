@@ -12,7 +12,7 @@
 
 ## Latest CI results (2026-10-23)
 - Browser simulator validation workflow passed after adding local-session schema, dimension, and point-boundary checks: [run history](https://github.com/and14122001/-OR-RoomScan-Studio/actions).
-- GitHub Pages deployment is still blocked because the repository Pages site is not enabled and the workflow token is not authorized to create the Pages site. Repository owner/admin must set **Settings → Pages → Build and deployment → Source: GitHub Actions**; then rerun the deploy workflow.
+- GitHub Pages is enabled and deployment succeeded. Browser simulator is hosted at https://and14122001.github.io/-OR-RoomScan-Studio/.
 - The manual Quest 3 APK workflow passed repository preflight but stopped at its explicit Unity licensing-secret check. No Unity compilation occurred and no APK artifact was produced. Configure `UNITY_LICENSE`, or `UNITY_EMAIL` + `UNITY_PASSWORD`; if Meta package resolution requires it, also configure `META_UPM_TOKEN`.
 
 ## Not yet verified
@@ -42,4 +42,4 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Added a browser-side fixture library for manually specified embedded equipment, fixed cabinets, counters, and other fixed objects.
 - Each object record stores a stable local ID, name, category, XYZ origin, width/depth/height, and notes. The objects are rendered as colored 3D box outlines in the room view and included in local save/load plus JSON export/import.
 - Bounds validation rejects objects outside the room or with invalid dimensions. This is parameterized/manual modeling, not automatic scan reconstruction; actual Quest 3 sensing, mesh extraction, occlusion, and metrology remain unverified.
-- Change commit: `506ea7e90fd9f38cab90503eff1d6ad2767a31cd`. Browser CI should be checked after this change before calling the update tested.
+- Change commits: `506ea7e90fd9f38cab90503eff1d6ad2767a31cd` (feature), `321a08d63ec4da7dbf03f548487f4446190f488f` (JavaScript fix). Browser simulator tests passed in [run 39902182465](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902182465); Pages deployment succeeded in [run 39902182483](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902182483).
