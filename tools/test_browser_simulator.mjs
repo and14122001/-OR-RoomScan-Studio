@@ -63,8 +63,8 @@ const secondOutline = [
   "0","LWPOLYLINE","8","SINK","70","1",
   "10","1500","20","0","10","2500","20","0",
   "10","2500","20","600","10","1500","20","600"
-].join("\\n");
-const multiDxf = sampleDxf.replace("0\\nENDSEC", secondOutline + "\\n0\\nENDSEC");
+].join("\n");
+const multiDxf = sampleDxf.replace("0\nENDSEC", secondOutline + "\n0\nENDSEC");
 const multiParsed = dxfMath.parse(multiDxf, dxfMath.scale.mm);
 assert.equal(multiParsed.length, 2, "two closed outlines in one DXF should parse");
 assert.ok(Math.abs(multiParsed[1].offsetX - 1.5) < 1e-9, "second outline preserves its original 1.5 m relative X placement");
