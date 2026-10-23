@@ -10,6 +10,7 @@ manifest_path = ROOT / "Unity/Packages/manifest.json"
 controller_path = ROOT / "Unity/Assets/ORRoomScan/Scripts/RoomScanRuntimeController.cs"
 build_path = ROOT / "Unity/Assets/Editor/ORRoomScanBuild.cs"
 workflow_path = ROOT / ".github/workflows/build-quest-apk.yml"
+scene_setup_path = ROOT / "Unity/Assets/Editor/ORRoomScanSceneSetup.cs"
 
 try:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -39,9 +40,13 @@ if "TODO:" in controller:
     errors.append("Runtime controller still contains TODO placeholders.")
 
 build = build_path.read_text(encoding="utf-8") if build_path.exists() else ""
-for symbol in ("BuildPipeline.BuildPlayer", "RoomScanSession", "RoomScanner", "AndroidArchitecture.ARM64"):
+for symbol in ("BuildPipeline.BuildPlayer", "RoomScanSession", "RoomScanner", "RoomScanRuntimeController", "AndroidArchitecture.ARM64"):
     if symbol not in build:
         errors.append(f"Android build entry point is missing validation: {symbol}")
+
+scene_setup = scene_setup_path.read_text(encoding="utf-8") if scene_setup_path.exists() else ""
+if "Prepare Scene For APK" not in scene_setup or "EditorBuildSettings.scenes" not in scene_setup:
+    errors.append("Scene preparation command must save/register the scene for Android builds.")
 
 workflow = workflow_path.read_text(encoding="utf-8") if workflow_path.exists() else ""
 for symbol in ("ORRoomScanBuild.BuildAndroid", "UNITY_LICENSE", "Unity/Build/Android"):
