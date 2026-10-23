@@ -9,7 +9,7 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport", "pdfImport", "pdfFile", "pdfPage", "pdfKnownLength", "pdfHeight", "loadPdf", "pdfCalibrate", "pdfTrace", "pdfUndo", "pdfClose", "pdfBuild", "pdfCanvas", "pdfReport"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
@@ -30,6 +30,11 @@ const polyMath = {};
 vm.runInNewContext(areaSource + ";globalThis.area=polygonArea;", polyMath);
 assert.equal(polyMath.area([{x:0,y:0},{x:4,y:0},{x:3,y:2},{x:0,y:2}]), 7, "non-rectangular polygon area should be 7 m²");
 assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行建模"), "plan-angled wall and vertical-profile slope are distinguished");
+assert.ok(html.includes("pdfjsLib.getDocument"), "PDF.js loads PDF documents");
+assert.ok(scriptMatch[1].includes("PDF-traced"), "PDF traced geometry retains source provenance");
+assert.ok(scriptMatch[1].includes("pdfMetersPerPx"), "PDF workflow requires scale calibration");
+assert.ok(scriptMatch[1].includes("pdfPoly.length>=50"), "PDF outline vertex count is bounded");
+assert.ok(html.includes("pdf.worker.min.js"), "PDF.js worker is configured");
 const math = { room: { w: 4, l: 6, h: 2.5 } };
 vm.runInNewContext(volumeSource + "\n" + distanceSource[0], math);
 assert.equal(math.volume(), 60, "default room volume should be 60 m³");
