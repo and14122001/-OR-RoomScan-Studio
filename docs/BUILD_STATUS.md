@@ -37,3 +37,9 @@ This repo cannot truthfully be called installable until the Unity Editor complet
 
 ## Safety / precision
 The app is a visualization and room-reconstruction prototype, not a certified survey instrument or medical device. Quest 3 depth reconstruction must be validated against independently measured reference dimensions. Do not claim ±1 mm unless documented validation results support it. Medical-gas drawing data must remain tied to approved source drawings/specifications; never infer pipe sizes, flows, pressures, or valve locations.
+
+## Room fixtures and cabinet modeling update
+- Added a browser-side fixture library for manually specified embedded equipment, fixed cabinets, counters, and other fixed objects.
+- Each object record stores a stable local ID, name, category, XYZ origin, width/depth/height, and notes. The objects are rendered as colored 3D box outlines in the room view and included in local save/load plus JSON export/import.
+- Bounds validation rejects objects outside the room or with invalid dimensions. This is parameterized/manual modeling, not automatic scan reconstruction; actual Quest 3 sensing, mesh extraction, occlusion, and metrology remain unverified.
+- Change commit: `506ea7e90fd9f38cab90503eff1d6ad2767a31cd`. Browser CI should be checked after this change before calling the update tested.
