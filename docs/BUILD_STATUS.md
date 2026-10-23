@@ -6,7 +6,8 @@
 - A minimal runtime controller calls the documented `RoomScanSession` API for scan start, finalize/save, and load-latest.
 - A headset HUD/controller script exposes scan start, finalize/save, and load-latest.
 - An Editor menu command attaches the runtime controller to the Game-Ready scene.
-- A guarded Android ARM64 build entry point validates that the scene contains QuestRoomScan components before building.
+- A guarded Android ARM64 build entry point validates the configured scene set, sets the app ID, and builds the APK.
+- A repeatable ADB helper installs and launches the APK on an authorized Quest/Android device.
 - A manual GitHub Actions workflow runs repository preflight, then attempts the licensed Unity build and uploads the APK artifact.
 
 ## Not yet verified
