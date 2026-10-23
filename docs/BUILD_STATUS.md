@@ -58,3 +58,11 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Added `docs/MULTI_SOURCE_MODELING.md` defining the unified workflow for Quest room scans, CAD floor/ceiling/elevation drawings, and equipment photos, including source provenance, coordinate registration, dimension verification, and medical-gas design constraints.
 - User-provided 4F cardiac catheterization room reference image reviewed: it contains a floor plan, ceiling plan, and A/B/C/D elevations. Treat as a raster reference only; use original CAD and verified dimensions for engineering geometry.
 - This commit documents the next development scope; it does not claim photo reconstruction, raster vectorization, or Quest 3 native scanning are already implemented.
+
+
+## 2D PDF modeling support (2026-10-24)
+
+- Added browser PDF import using PDF.js: select PDF/page, calibrate scale from a known dimension, manually trace up to 50 closed-footprint vertices, undo/close outline, set extrusion height and XYZ placement, and create a 3D prism with PDF filename/page provenance.
+- Supports vector and scanned/raster PDFs as rendered pages. It does not automatically vectorize the drawing, recognize dimensions, infer depth/height, or perform semantic 3D reconstruction. PDF.js currently loads from a CDN, so first use requires internet access.
+- Automated browser test workflow passed for the implementation commit; an additional regression run including PDF UI/parser assertions also passed. Latest Pages deployment for the updated test/docs commit is being checked separately.
+- Engineering dimensions must be calibrated against confirmed drawing dimensions. No medical gas sizes, flow, pressures, or valve positions are inferred.
