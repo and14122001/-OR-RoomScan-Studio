@@ -59,6 +59,7 @@ Never treat image pixel measurements as engineering-grade dimensions without a k
 ## Current implementation status (2026-10-23)
 
 - Browser lab: manual room and equipment box models, local save/load, JSON import/export.
+- Room footprint prototype: editable XY polygon boundary (3–50 vertices) with area-based volume and non-rectangular wall rendering; boundary persists in session JSON and is validated on load/import. Wall tops are currently horizontal at one shared height. A wall with a sloped vertical profile is not yet modeled.
 - CAD: ASCII DXF closed LWPOLYLINE footprint import, user-entered extrusion height, units, placement and planar rotation; multiple outlines preserve relative placement.
 - Not yet implemented/verified: direct DWG parsing, automatic raster drawing vectorization, photo-based photogrammetry, image texture mapping onto generated equipment meshes, multi-view reconstruction, and Quest 3 on-device scanning/registration.
 - Browser CI covers parser/math/source-level regression checks; it does not replace visual browser QA, Unity compilation, or Quest 3 hardware validation.
