@@ -23,4 +23,4 @@ This simulator does not access Quest 3 passthrough, Meta Scene API, spatial anch
 
 ## Validation
 
-Run the built-in `執行測試` panel in the browser. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
+Run the built-in `執行測試` panel in the browser. The repository also includes a dependency-free Node.js check: run `node tools/test_browser_simulator.mjs` from the repository root. The GitHub Pages workflow runs this check before deployment. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
