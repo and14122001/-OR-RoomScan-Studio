@@ -9,7 +9,7 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
@@ -31,3 +31,12 @@ assert.ok(html.includes("Quest 3 實機"), "hardware test limitation is disclose
 assert.ok(/function startScan\(\)[^}]*requestAnimationFrame\(tick\)/.test(scriptMatch[1]), "scan animation starts with a browser-provided timestamp");
 assert.ok(!/function startScan\(\)[^}]*;tick\(\)/.test(scriptMatch[1]), "scan animation does not invoke tick without a timestamp");
 console.log("PASS: inline JavaScript syntax, unique UI IDs, required controls, room volume, 3D distance, unit conversion, import/export safety markers, and hardware disclaimer.");
+
+assert.ok(scriptMatch[1].includes("function objectValid(o)"), "fixture model validation exists");
+assert.ok(scriptMatch[1].includes("objects:objects.map(o=>({...o}))"), "fixture models are included in saved sessions");
+assert.ok(scriptMatch[1].includes("objects=(s.objects||[]).map(o=>({...o}))"), "fixture models are restored from sessions");
+assert.ok(scriptMatch[1].includes("objects.forEach(o=>"), "fixture and cabinet models are rendered in the room view");
+assert.ok(scriptMatch[1].includes("['embedded','cabinet','counter','other'].includes(o.type)"), "fixture types are constrained to supported categories");
+assert.ok(scriptMatch[1].includes("o.x+o.w<=room.w+1e-6"), "fixture dimensions are validated against room boundaries");
+assert.ok(html.includes("不會自動猜測"), "fixture measurements are explicitly user-provided");
+console.log("PASS: fixture/cabinet model UI, bounds validation, room rendering, and session persistence checks.");
