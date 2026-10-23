@@ -74,7 +74,7 @@ assert.ok(scriptMatch[1].includes("rotateDxfGroup(parseClosedDxfPolylines"), "DX
 const rotateMatch = scriptMatch[1].match(/function rotateDxfGroup\(shapes,degrees\)\{[\s\S]*?\n\}/);
 assert.ok(rotateMatch, "DXF group rotation function can be isolated for functional testing");
 const rotateCtx = {};
-vm.runInNewContext(rotateMatch[0] + "\\nglobalThis.rotate=rotateDxfGroup;", rotateCtx);
+vm.runInNewContext(rotateMatch[0] + "\nglobalThis.rotate=rotateDxfGroup;", rotateCtx);
 const rotated = rotateCtx.rotate(parsed, 90);
 assert.ok(Math.abs(rotated[0].w - 0.6) < 1e-9, "90-degree DXF rotation swaps footprint width to 0.6 m");
 assert.ok(Math.abs(rotated[0].d - 1.0) < 1e-9, "90-degree DXF rotation swaps footprint depth to 1 m");
