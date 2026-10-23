@@ -9,6 +9,12 @@ Meta Quest 3 mixed-reality room scanning and CAD comparison toolkit, initially t
 - Align existing CAD drawings with scan geometry and visualize deviations.
 - Produce traceable measurement reports and interoperable exports.
 
+## Browser Virtual Lab
+
+A free, standalone browser simulator is available in [web/index.html](web/index.html), with setup and limitations documented in [web/README.md](web/README.md). It supports procedural room geometry, adjustable dimensions, draggable synthetic measurement points, simulated scan progress, browser-local save/load, CSV/JSON export, and in-page checks. It does **not** read Quest 3 sensors or prove physical measurement accuracy.
+
+A GitHub Pages workflow is included at [.github/workflows/deploy-web-simulator.yml](.github/workflows/deploy-web-simulator.yml). Deployment still depends on GitHub Actions / Pages being enabled and the workflow succeeding; until verified, use the HTML file directly from the repository or download it and open it locally.
+
 ## Important limitations
 - **This repository is an early scaffold, not a finished Unity app or APK.**
 - Quest 3-only ±1 mm measurement accuracy is an unverified target, not a claim.
