@@ -6,7 +6,7 @@
 - A minimal runtime controller calls the documented `RoomScanSession` API for scan start, finalize/save, and load-latest.
 - A headset HUD/controller script exposes scan start, finalize/save, and load-latest.
 - An Editor menu command attaches the runtime controller to the Game-Ready scene.
-- A guarded Android ARM64 build entry point validates the configured scene set, sets the app ID, and builds the APK.
+- A guarded Android ARM64 build entry point validates the configured scene set, checks the required Android xatlas native plugin, sets the app ID, and builds the APK.
 - A repeatable ADB helper installs and launches the APK on an authorized Quest/Android device.
 - A manual GitHub Actions workflow runs repository preflight, then attempts the licensed Unity build and uploads the APK artifact.
 
@@ -26,8 +26,9 @@ This repo cannot truthfully be called installable until the Unity Editor complet
 2. Open the `Unity/` folder and let packages resolve; resolve any package-manager errors without silently changing the QuestRoomScan pin.
 3. Let Package Manager resolve the pinned Meta XR Core/OpenXR dependencies. If the registry denies access, sign in/accept the SDK license in Unity and configure the required Meta package authentication; do not blindly upgrade package versions.
 4. Run QuestRoomScan's Game-Ready Setup wizard, then use **OR RoomScan > Prepare Scene For APK**. Save/commit the generated scene and project settings into this repo; the preparation menu adds the scene to Build Settings.
-5. Build Android ARM64 APK locally or configure the GitHub Actions license secrets and run **Actions → Build Quest 3 APK → Run workflow**.
-6. Install on Quest 3 and capture evidence (build log, app launch, passthrough, scan/save/load test).
+5. In the RoomScan setup wizard's **NATIVE PLUGINS** section, build xatlas if Android `libxatlas.so` is missing; wait for the build to finish.
+6. Build Android ARM64 APK locally or configure the GitHub Actions license secrets and run **Actions → Build Quest 3 APK → Run workflow**.
+7. Install on Quest 3 and capture evidence (build log, app launch, passthrough, scan/save/load test).
 
 ## Safety / precision
 The app is a visualization and room-reconstruction prototype, not a certified survey instrument or medical device. Quest 3 depth reconstruction must be validated against independently measured reference dimensions. Do not claim ±1 mm unless documented validation results support it. Medical-gas drawing data must remain tied to approved source drawings/specifications; never infer pipe sizes, flows, pressures, or valve locations.
