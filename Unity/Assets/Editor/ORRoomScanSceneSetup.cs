@@ -33,7 +33,7 @@ public static class ORRoomScanSceneSetup
         if (string.IsNullOrWhiteSpace(scenePath))
         {
             const string sceneFolder = "Assets/Scenes";
-            Directory.CreateDirectory(sceneFolder);
+            Directory.CreateDirectory(Path.Combine(Application.dataPath, "Scenes"));
             scenePath = sceneFolder + "/ORRoomScan.unity";
         }
 
