@@ -63,3 +63,15 @@ Never treat image pixel measurements as engineering-grade dimensions without a k
 - CAD: ASCII DXF closed LWPOLYLINE footprint import, user-entered extrusion height, units, placement and planar rotation; multiple outlines preserve relative placement.
 - Not yet implemented/verified: direct DWG parsing, automatic raster drawing vectorization, photo-based photogrammetry, image texture mapping onto generated equipment meshes, multi-view reconstruction, and Quest 3 on-device scanning/registration.
 - Browser CI covers parser/math/source-level regression checks; it does not replace visual browser QA, Unity compilation, or Quest 3 hardware validation.
+
+
+## 2D PDF import milestone (2026-10-24)
+
+The browser lab now includes a PDF page workflow using PDF.js:
+- Import standard or scanned PDF, choose page, render page preview.
+- Calibrate scale by clicking two endpoints of a known dimension and entering its actual length in metres.
+- Manually trace a closed footprint with up to 50 vertices, inspect numbered corners, undo points, and extrude using a user-entered height.
+- Create a 3D prism record with PDF filename/page provenance, explicit placement, category, and height; normal project JSON persistence applies.
+- Supports both vector-origin PDFs and raster/scanned PDFs at the rendered-page level; it does **not** automatically recover CAD vectors, recognize dimension annotations, infer equipment depth/height, or semantically reconstruct a full drawing.
+- PDF.js is loaded from cdnjs, so first use requires network access. The original PDF remains user-controlled in browser memory; the generated model contains traced geometry/provenance, not the embedded PDF bytes.
+- All scale calibration and traced geometry require user verification against approved dimensions. Do not use screenshot-derived estimates as engineering dimensions.
