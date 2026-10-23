@@ -22,6 +22,12 @@ if deps.get("com.genesis.roomscan") != "https://github.com/genesisinteractive/Qu
     errors.append("QuestRoomScan must remain pinned to v1.3.2.")
 if deps.get("com.unity.xr.arfoundation") != "6.1.1":
     errors.append("AR Foundation must match QuestRoomScan v1.3.2 (6.1.1).")
+if deps.get("com.meta.xr.sdk.core") != "205.0.0":
+    errors.append("Meta XR Core must match the pinned QuestRoomScan/MRUK baseline (205.0.0).")
+if deps.get("com.unity.xr.openxr") != "1.16.1":
+    errors.append("OpenXR must be pinned to the validated Unity 6 baseline (1.16.1).")
+if deps.get("com.unity.xr.meta-openxr") != "2.6.1":
+    errors.append("Unity OpenXR Meta must be pinned to 2.6.1.")
 if not (ROOT / "Unity/ProjectSettings/ProjectVersion.txt").is_file():
     errors.append("Unity ProjectVersion.txt is missing.")
 
