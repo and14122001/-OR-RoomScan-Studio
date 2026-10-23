@@ -30,4 +30,4 @@ Run the built-in `執行測試` panel in the browser. The repository also includ
 1. In the GitHub repository, open **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions** and save.
 3. Open **Actions → Deploy Browser Virtual Lab** and re-run the latest workflow, or push a later change under `web/`.
-4. When the deployment job succeeds, open its `github-pages` environment URL. Until repository Pages is enabled by an owner/admin, deployment cannot be completed by the workflow token alone.
+4. The current deployment URL is https://and14122001.github.io/-OR-RoomScan-Studio/. The latest successful deploy is listed in GitHub Actions.
