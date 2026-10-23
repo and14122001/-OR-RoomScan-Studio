@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Fast repository preflight; does not replace Unity compilation or device tests."""
+import json
+import pathlib
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+errors = []
+manifest_path = ROOT / "Unity/Packages/manifest.json"
+controller_path = ROOT / "Unity/Assets/ORRoomScan/Scripts/RoomScanRuntimeController.cs"
+build_path = ROOT / "Unity/Assets/Editor/ORRoomScanBuild.cs"
+workflow_path = ROOT / ".github/workflows/build-quest-apk.yml"
+
+try:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+except Exception as exc:
+    print(f"FAIL: invalid/missing Unity package manifest: {exc}")
+    sys.exit(1)
+
+deps = manifest.get("dependencies", {})
+if deps.get("com.genesis.roomscan") != "https://github.com/genesisinteractive/QuestRoomScan.git#v1.3.2":
+    errors.append("QuestRoomScan must remain pinned to v1.3.2.")
+if deps.get("com.unity.xr.arfoundation") != "6.1.1":
+    errors.append("AR Foundation must match QuestRoomScan v1.3.2 (6.1.1).")
+if not (ROOT / "Unity/ProjectSettings/ProjectVersion.txt").is_file():
+    errors.append("Unity ProjectVersion.txt is missing.")
+
+controller = controller_path.read_text(encoding="utf-8") if controller_path.exists() else ""
+for symbol in ("RoomScanSession.Instance", "StartScanAsync", "FinalizeScanAsync", "LoadLatestAsync"):
+    if symbol not in controller:
+        errors.append(f"Runtime controller is missing expected integration call: {symbol}")
+if "TODO:" in controller:
+    errors.append("Runtime controller still contains TODO placeholders.")
+
+build = build_path.read_text(encoding="utf-8") if build_path.exists() else ""
+for symbol in ("BuildPipeline.BuildPlayer", "RoomScanSession", "RoomScanner", "AndroidArchitecture.ARM64"):
+    if symbol not in build:
+        errors.append(f"Android build entry point is missing validation: {symbol}")
+
+workflow = workflow_path.read_text(encoding="utf-8") if workflow_path.exists() else ""
+for symbol in ("ORRoomScanBuild.BuildAndroid", "UNITY_LICENSE", "Unity/Build/Android"):
+    if symbol not in workflow:
+        errors.append(f"APK workflow is missing expected configuration: {symbol}")
+
+if errors:
+    for error in errors:
+        print("FAIL:", error)
+    sys.exit(1)
+
+print("PASS: repository preflight checks succeeded.")
+print("NOTE: this checks repository wiring only; Unity compilation and Quest 3 device tests are still required.")
