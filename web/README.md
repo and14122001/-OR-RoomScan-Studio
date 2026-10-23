@@ -23,4 +23,11 @@ This simulator does not access Quest 3 passthrough, Meta Scene API, spatial anch
 
 ## Validation
 
-Run the built-in `執行測試` panel in the browser. The repository also includes a dependency-free Node.js check: run `node tools/test_browser_simulator.mjs` from the repository root. The GitHub Pages workflow runs this check before deployment. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
+Run the built-in `執行測試` panel in the browser. The repository also includes a dependency-free Node.js check: run `node tools/test_browser_simulator.mjs` from the repository root. The independent `Browser Simulator Tests` workflow runs this check on GitHub Actions. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
+
+## Publish a free hosted preview
+
+1. In the GitHub repository, open **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions** and save.
+3. Open **Actions → Deploy Browser Virtual Lab** and re-run the latest workflow, or push a later change under `web/`.
+4. When the deployment job succeeds, open its `github-pages` environment URL. Until repository Pages is enabled by an owner/admin, deployment cannot be completed by the workflow token alone.
