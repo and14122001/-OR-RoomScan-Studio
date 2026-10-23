@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "web/**"
+      - "tools/test_browser_simulator.mjs"
       - ".github/workflows/deploy-web-simulator.yml"
   workflow_dispatch:
 permissions:
@@ -27,6 +28,7 @@ jobs:
       - name: Validate standalone simulator
         run: |
           test -s web/index.html
+          node tools/test_browser_simulator.mjs
           grep -q 'id="room"' web/index.html
           grep -q 'id="runTests"' web/index.html
           grep -q 'simulationOnly:true' web/index.html
