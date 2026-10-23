@@ -9,7 +9,7 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
@@ -17,6 +17,15 @@ const volumeSource = scriptMatch[1].match(/function volume\(\)\{[^}]+\}/);
 const distanceSource = scriptMatch[1].match(/function pointDistance\(a,b\)\{[^}]+\}/);
 assert.ok(volumeSource, "volume calculation exists");
 assert.ok(distanceSource, "3D point distance calculation exists");
+assert.ok(scriptMatch[1].includes("room.polygon"), "room renderer supports arbitrary polygon boundaries");
+assert.ok(scriptMatch[1].includes("牆段輪廓無效"), "custom wall boundary validation exists");
+assert.ok(scriptMatch[1].includes("room.polygon.map(p=>p.x+','+p.y).join"), "custom wall vertices are restored in load/import UI");
+const areaSource = scriptMatch[1].match(/function polygonArea\(poly\)\{[^}]+\}/);
+assert.ok(areaSource, "polygon area calculation exists");
+const polyMath = {};
+vm.runInNewContext(areaSource[0] + ";globalThis.area=polygonArea;", polyMath);
+assert.equal(polyMath.area([{x:0,y:0},{x:4,y:0},{x:3,y:2},{x:0,y:2}]), 7, "non-rectangular polygon area should be 7 m²");
+assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行建模"), "plan-angled wall and vertical-profile slope are distinguished");
 const math = { room: { w: 4, l: 6, h: 2.5 } };
 vm.runInNewContext(volumeSource[0] + "\n" + distanceSource[0], math);
 assert.equal(math.volume(), 60, "default room volume should be 60 m³");
