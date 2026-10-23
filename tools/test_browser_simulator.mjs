@@ -13,9 +13,11 @@ for (const id of ["room", "width", "length", "height", "start", "finish", "save"
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
-const volumeSource = scriptMatch[1].match(/function volume\(\)\{[^}]+\}/);
+const volumeStart = scriptMatch[1].indexOf("function polygonArea(poly){");
+const volumeEnd = scriptMatch[1].indexOf("\\nfunction parseRoomPolygon", volumeStart);
+const volumeSource = volumeStart >= 0 && volumeEnd > volumeStart ? scriptMatch[1].slice(volumeStart, volumeEnd) : null;
 const distanceSource = scriptMatch[1].match(/function pointDistance\(a,b\)\{[^}]+\}/);
-assert.ok(volumeSource, "volume calculation exists");
+assert.ok(volumeSource, "polygon area and volume calculations exist");
 assert.ok(distanceSource, "3D point distance calculation exists");
 assert.ok(scriptMatch[1].includes("room.polygon"), "room renderer supports arbitrary polygon boundaries");
 assert.ok(scriptMatch[1].includes("牆段輪廓無效"), "custom wall boundary validation exists");
