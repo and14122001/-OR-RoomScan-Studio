@@ -43,3 +43,9 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Each object record stores a stable local ID, name, category, XYZ origin, width/depth/height, and notes. The objects are rendered as colored 3D box outlines in the room view and included in local save/load plus JSON export/import.
 - Bounds validation rejects objects outside the room or with invalid dimensions. This is parameterized/manual modeling, not automatic scan reconstruction; actual Quest 3 sensing, mesh extraction, occlusion, and metrology remain unverified.
 - Change commits: `506ea7e90fd9f38cab90503eff1d6ad2767a31cd` (feature), `321a08d63ec4da7dbf03f548487f4446190f488f` (JavaScript fix). Browser simulator tests passed in [run 39902182465](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902182465); Pages deployment succeeded in [run 39902182483](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902182483).
+
+## CAD import milestone (2026-10-23)
+- Added ASCII DXF import for closed `LWPOLYLINE` outlines; explicit unit conversion, extrusion height, XYZ placement, fixture category, and source layer/file metadata.
+- Imported footprints render as extruded 3D prisms and persist with session JSON/local save. Parser rejects missing/invalid closed outlines and applies size/boundary checks.
+- Regression tests now exercise a 1000 × 600 mm closed cabinet footprint converting to 1.0 × 0.6 m, preserving the layer, and rejecting a file with no closed outline.
+- Commit: `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5` (parser fix); test commit `252cebc945c75d8e4d15e084e1816c60622aa079`. Verify the latest CI before marking the DXF feature tested.
