@@ -23,6 +23,28 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
     private string status = "Ready. A/X: start scan; B/Y: finish and save.";
     private Text hudText;
     private RoomScanSession session;
+    private readonly List<InputDevice> controllerDevices = new List<InputDevice>();
+
+    private void OnEnable()
+    {
+        InputDevices.deviceConnected += OnControllerDeviceChanged;
+        InputDevices.deviceDisconnected += OnControllerDeviceChanged;
+        RefreshControllerDevices();
+    }
+
+    private void OnDisable()
+    {
+        InputDevices.deviceConnected -= OnControllerDeviceChanged;
+        InputDevices.deviceDisconnected -= OnControllerDeviceChanged;
+    }
+
+    private void OnControllerDeviceChanged(InputDevice _) => RefreshControllerDevices();
+
+    private void RefreshControllerDevices()
+    {
+        controllerDevices.Clear();
+        InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller, controllerDevices);
+    }
 
     private async void Start()
     {
@@ -153,11 +175,9 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
         Debug.Log("[OR RoomScan] " + message.Replace("\n", " | "));
     }
 
-    private static bool ReadAnyControllerButton(InputFeatureUsage<bool> usage)
+    private bool ReadAnyControllerButton(InputFeatureUsage<bool> usage)
     {
-        var devices = new List<InputDevice>();
-        InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller, devices);
-        foreach (var device in devices)
+        foreach (var device in controllerDevices)
         {
             if (device.isValid && device.TryGetFeatureValue(usage, out bool pressed) && pressed)
                 return true;
