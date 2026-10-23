@@ -1,0 +1,34 @@
+name: Browser Simulator Tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "tools/test_browser_simulator.mjs"
+      - ".github/workflows/test-browser-simulator.yml"
+  pull_request:
+    paths:
+      - "web/**"
+      - "tools/test_browser_simulator.mjs"
+      - ".github/workflows/test-browser-simulator.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate browser simulator
+        run: |
+          test -s web/index.html
+          node tools/test_browser_simulator.mjs
+          grep -q 'id="room"' web/index.html
+          grep -q 'id="runTests"' web/index.html
+          grep -q 'simulationOnly:true' web/index.html
+          grep -q 'Quest 3' web/index.html
