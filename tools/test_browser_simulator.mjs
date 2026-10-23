@@ -14,7 +14,7 @@ for (const id of ["room", "width", "length", "height", "start", "finish", "save"
 }
 
 const volumeStart = scriptMatch[1].indexOf("function polygonArea(poly){");
-const volumeEnd = scriptMatch[1].indexOf("\\nfunction parseRoomPolygon", volumeStart);
+const volumeEnd = scriptMatch[1].indexOf("\nfunction parseRoomPolygon", volumeStart);
 const volumeSource = volumeStart >= 0 && volumeEnd > volumeStart ? scriptMatch[1].slice(volumeStart, volumeEnd) : null;
 const distanceSource = scriptMatch[1].match(/function pointDistance\(a,b\)\{[^}]+\}/);
 assert.ok(volumeSource, "polygon area and volume calculations exist");
