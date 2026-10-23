@@ -24,7 +24,7 @@ This repo cannot truthfully be called installable until the Unity Editor complet
 1. Install Unity 6.2+ with Android Build Support, Android SDK & NDK Tools, and OpenJDK.
 2. Open the `Unity/` folder and let packages resolve; resolve any package-manager errors without silently changing the QuestRoomScan pin.
 3. Install the Meta XR SDK / Meta OpenXR packages using Meta's official setup instructions.
-4. Run QuestRoomScan's Game-Ready Setup wizard, then use **OR RoomScan > Attach Runtime Controller To Active Scene**. Save the generated scene/project settings into this repo and add the scene to Build Settings.
+4. Run QuestRoomScan's Game-Ready Setup wizard, then use **OR RoomScan > Prepare Scene For APK**. Save the generated scene/project settings into this repo and add the scene to Build Settings.
 5. Build Android ARM64 APK locally or configure the GitHub Actions license secrets and run **Actions → Build Quest 3 APK → Run workflow**.
 6. Install on Quest 3 and capture evidence (build log, app launch, passthrough, scan/save/load test).
 
