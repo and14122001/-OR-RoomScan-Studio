@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using Genesis.RoomScan;
@@ -45,7 +46,7 @@ public static class ORRoomScanBuild
         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
 
-        string outputDir = Path.GetFullPath("Build/Android");
+        string outputDir = Path.GetFullPath(Path.Combine(Application.dataPath, "../Build/Android"));
         Directory.CreateDirectory(outputDir);
         string outputPath = Path.Combine(outputDir, "ORRoomScanStudio.apk");
 
