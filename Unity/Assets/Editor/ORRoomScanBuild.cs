@@ -37,9 +37,10 @@ public static class ORRoomScanBuild
                 scenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
             var session = UnityEngine.Object.FindFirstObjectByType<RoomScanSession>();
             var scanner = UnityEngine.Object.FindFirstObjectByType<RoomScanner>();
-            if (session == null || scanner == null)
+            var controller = UnityEngine.Object.FindFirstObjectByType<RoomScanRuntimeController>();
+            if (session == null || scanner == null || controller == null)
                 throw new BuildFailedException(
-                    $"Scene '{scenePath}' is missing QuestRoomScan RoomScanSession/RoomScanner. Run the Game-Ready Setup wizard and save the scene.");
+                    $"Scene '{scenePath}' is missing RoomScanSession, RoomScanner, or RoomScanRuntimeController. Run the Game-Ready Setup wizard, then OR RoomScan > Attach Runtime Controller To Active Scene, save the scene, and add it to Build Settings.");
         }
 
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
