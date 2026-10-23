@@ -11,7 +11,7 @@
 2. Let Package Manager resolve packages. Resolve any version conflict before proceeding; do not silently upgrade QuestRoomScan.
 3. The manifest pins Meta XR Core `205.0.0`, Unity OpenXR `1.16.1`, and Unity OpenXR Meta `2.6.1`. Sign in to Unity/Meta and accept the applicable SDK license if Package Manager requests access; Meta's Core SDK is a restricted asset. If UPM cannot resolve a package, fix authentication/entitlement before changing versions. See [Meta XR Core SDK setup](https://developers.meta.com/vr/documentation/unity/unity-core-sdk/) and [Unity OpenXR Meta package docs](https://docs.unity.com/en-us/engine/6000.0/manual/packages-list/packages-all/pack-safe/com-unity-xr-meta-openxr).
 4. In the Unity menu, open **RoomScan > Setup Scene** and run **Apply Game-Ready Setup**. After the build-target/domain reload, run it again if prompted. This wizard configures Quest build settings, URP, passthrough, scene support, anchors and permissions.
-5. Run **OR RoomScan > Attach Runtime Controller To Active Scene**. This attaches the app HUD/controller to the generated `RoomScanSession` object and saves the active scene.
+5. Run **OR RoomScan > Prepare Scene For APK**. This attaches the app HUD/controller to the generated `RoomScanSession` object and saves the active scene.
 6. Add that scene to **File > Build Profiles/Build Settings > Scenes**. Set Android as the build platform, ARM64 / IL2CPP, and build an APK. You can also run the GitHub Actions workflow after configuring Unity licensing secrets. Connect Quest 3 with Developer Mode and USB debugging enabled; install the APK using Build And Run or Android Platform Tools.
 
 ## Runtime controls
