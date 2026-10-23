@@ -10,6 +10,11 @@
 - A repeatable ADB helper installs and launches the APK on an authorized Quest/Android device.
 - A manual GitHub Actions workflow runs repository preflight, then attempts the licensed Unity build and uploads the APK artifact.
 
+## Latest CI results (2026-10-23)
+- Browser simulator validation workflow passed after adding local-session schema, dimension, and point-boundary checks: [run history](https://github.com/and14122001/-OR-RoomScan-Studio/actions).
+- GitHub Pages deployment is still blocked because the repository Pages site is not enabled and the workflow token is not authorized to create the Pages site. Repository owner/admin must set **Settings → Pages → Build and deployment → Source: GitHub Actions**; then rerun the deploy workflow.
+- The manual Quest 3 APK workflow passed repository preflight but stopped at its explicit Unity licensing-secret check. No Unity compilation occurred and no APK artifact was produced. Configure `UNITY_LICENSE`, or `UNITY_EMAIL` + `UNITY_PASSWORD`; if Meta package resolution requires it, also configure `META_UPM_TOKEN`.
+
 ## Not yet verified
 - Unity Package Manager resolution in an actual Unity 6.2 Editor.
 - Meta XR Core / Meta OpenXR package installation and project setup.
