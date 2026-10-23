@@ -9,7 +9,7 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
@@ -70,5 +70,14 @@ assert.equal(multiParsed.length, 2, "two closed outlines in one DXF should parse
 assert.ok(Math.abs(multiParsed[1].offsetX - 1.5) < 1e-9, "second outline preserves its original 1.5 m relative X placement");
 assert.ok(Math.abs(multiParsed[1].offsetY) < 1e-9, "second outline preserves its original relative Y placement");
 assert.ok(scriptMatch[1].includes("x:ox+s.offsetX,y:oy+s.offsetY"), "DXF import preserves relative placement between outlines");
+assert.ok(scriptMatch[1].includes("rotateDxfGroup(parseClosedDxfPolylines"), "DXF import applies whole-drawing rotation");
+const rotateMatch = scriptMatch[1].match(/function rotateDxfGroup\(shapes,degrees\)\{[\s\S]*?\n\}/);
+assert.ok(rotateMatch, "DXF group rotation function can be isolated for functional testing");
+const rotateCtx = {};
+vm.runInNewContext(rotateMatch[0] + "\\nglobalThis.rotate=rotateDxfGroup;", rotateCtx);
+const rotated = rotateCtx.rotate(parsed, 90);
+assert.ok(Math.abs(rotated[0].w - 0.6) < 1e-9, "90-degree DXF rotation swaps footprint width to 0.6 m");
+assert.ok(Math.abs(rotated[0].d - 1.0) < 1e-9, "90-degree DXF rotation swaps footprint depth to 1 m");
+assert.throws(() => rotateCtx.rotate(parsed, 361), /旋轉角度/, "rotation outside supported range is rejected");
 assert.throws(() => dxfMath.parse("0\nSECTION\n2\nENTITIES\n0\nENDSEC\n0\nEOF", 0.001), /找不到有效封閉/, "rejects DXF with no closed polyline");
 console.log("PASS: DXF closed-polyline parsing, mm-to-m conversion, footprint vertices, layer metadata, and invalid-file rejection.");
