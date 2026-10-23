@@ -51,3 +51,10 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Imported footprints render as extruded 3D prisms and persist with session JSON/local save. Parser rejects missing/invalid closed outlines and applies size/boundary checks.
 - Regression tests now exercise a 1000 × 600 mm closed cabinet footprint converting to 1.0 × 0.6 m, preserving the layer, and rejecting a file with no closed outline.
 - Implementation commits: `be35f56887ee0c8054290e7682f130c83778dce7` and parser fix `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5`. Regression tests were fixed and passed in [run 39902550352](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550352). Pages redeployment is running in [run 39902550370](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550370).
+
+
+## Multi-source modeling requirements (2026-10-23)
+
+- Added `docs/MULTI_SOURCE_MODELING.md` defining the unified workflow for Quest room scans, CAD floor/ceiling/elevation drawings, and equipment photos, including source provenance, coordinate registration, dimension verification, and medical-gas design constraints.
+- User-provided 4F cardiac catheterization room reference image reviewed: it contains a floor plan, ceiling plan, and A/B/C/D elevations. Treat as a raster reference only; use original CAD and verified dimensions for engineering geometry.
+- This commit documents the next development scope; it does not claim photo reconstruction, raster vectorization, or Quest 3 native scanning are already implemented.
