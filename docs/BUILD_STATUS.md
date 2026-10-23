@@ -13,6 +13,7 @@
 ## Latest CI results (2026-10-23)
 - Browser simulator validation workflow passed after adding local-session schema, dimension, and point-boundary checks: [run history](https://github.com/and14122001/-OR-RoomScan-Studio/actions).
 - GitHub Pages is enabled and deployment succeeded. Browser simulator is hosted at https://and14122001.github.io/-OR-RoomScan-Studio/.
+- DXF import now preserves the relative X/Y placement of multiple closed polylines in one file instead of stacking every footprint at the same insertion point; a regression test checks two outlines and the 1.5 m source offset. The latest parser/test fix is awaiting GitHub Actions verification.
 - The manual Quest 3 APK workflow passed repository preflight but stopped at its explicit Unity licensing-secret check. No Unity compilation occurred and no APK artifact was produced. Configure `UNITY_LICENSE`, or `UNITY_EMAIL` + `UNITY_PASSWORD`; if Meta package resolution requires it, also configure `META_UPM_TOKEN`.
 
 ## Not yet verified
