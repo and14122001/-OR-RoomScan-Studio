@@ -14,6 +14,19 @@ These sources must be registered into one shared room coordinate system without 
 
 The provided image shows a 4F cardiac catheterization room equipment layout with a floor plan, ceiling plan, and A/B/C/D elevations. It can guide the workflow and identify corresponding views, but it is a raster image, not source CAD. Dimensions read from the image are reference-only until confirmed from original DWG/DXF or approved dimension schedules.
 
+### Important geometry note: sloped wall on elevations B and C
+
+The user explicitly identified a **sloped/angled wall section visible in elevations B and C**. Treat this as required non-orthogonal wall geometry, not as a rectangular wall that can be approximated away.
+
+Implementation requirements:
+- Room boundaries must support arbitrary polygon vertices and wall segments with independent endpoints, not only a rectangular box.
+- Represent the sloped wall using measured/confirmed plan endpoints and its height/profile from the relevant elevations or source CAD.
+- Distinguish a wall whose plan footprint is angled from a wall whose vertical profile is sloped; these are different geometries.
+- Do not infer angle, offset, height, or intersection from the raster screenshot. Obtain original DWG/DXF or confirmed dimensions/another view.
+- CAD import and Quest 3 registration must preserve this non-orthogonal boundary; do not snap it automatically to 90-degree corners.
+- Add validation cases for non-rectangular room polygons and sloped-wall geometry before claiming support.
+
+
 ## Proposed project workflow
 
 1. Create a room project and set units / coordinate origin.
