@@ -13,13 +13,13 @@ Open `index.html` in a modern browser. No dependencies, server, API key, login, 
 - Simulated scan progress (not connected to a camera, depth sensor, or headset)
 - Browser-local save/load using `localStorage`
 - CSV point export, JSON session export, and validated JSON session import
-- Live 3D Euclidean distance between the first two synthetic measurement points
+- Parameterized 3D box models for embedded equipment, fixed cabinets, counters, and other fixtures; each record stores name, category, XYZ position, width/depth/height, notes, and ID\n- Fixture models are rendered in the room wireframe and included in JSON save/load/import/export records\n- Live 3D Euclidean distance between the first two synthetic measurement points
 - Built-in checks for volume, unit conversion, 3D point distance, point bounds, session schema, and serialization
 - Honest status panel linking to the Unity build instructions and status
 
 ## Limitations
 
-This simulator does not access Quest 3 passthrough, Meta Scene API, spatial anchors, or real room meshes. It does not build or validate an Android APK. Measurement coordinates are synthetic and must not be used for engineering or medical-gas CAD design. No pipe sizes, flow rates, pressures, or valve locations are inferred.
+This simulator does not access Quest 3 passthrough, Meta Scene API, spatial anchors, or real room meshes. It does not build or validate an Android APK. Measurement coordinates and fixture models are synthetic/manual parameterized geometry and must not be treated as a scan-derived as-built record or used for engineering or medical-gas CAD design. Record actual dimensions and positions only after measuring and checking them yourself. No pipe sizes, flow rates, pressures, or valve locations are inferred.
 
 ## Validation
 
