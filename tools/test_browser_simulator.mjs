@@ -31,7 +31,7 @@ vm.runInNewContext(areaSource + ";globalThis.area=polygonArea;", polyMath);
 assert.equal(polyMath.area([{x:0,y:0},{x:4,y:0},{x:3,y:2},{x:0,y:2}]), 7, "non-rectangular polygon area should be 7 m²");
 assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行建模"), "plan-angled wall and vertical-profile slope are distinguished");
 const math = { room: { w: 4, l: 6, h: 2.5 } };
-vm.runInNewContext(volumeSource[0] + "\n" + distanceSource[0], math);
+vm.runInNewContext(volumeSource + "\\n" + distanceSource[0], math);
 assert.equal(math.volume(), 60, "default room volume should be 60 m³");
 assert.equal(math.pointDistance({x:0,y:0,z:0},{x:3,y:4,z:12}), 13, "3D Euclidean distance should be 13");
 assert.equal(Math.round(1.234 * 1000), 1234, "meters to millimeters conversion");
