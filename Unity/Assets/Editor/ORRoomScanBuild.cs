@@ -17,8 +17,8 @@ public static class ORRoomScanBuild
     public static void BuildAndroid()
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
-            EditorUserBuildSettings.SwitchActiveBuildTarget(
-                BuildTargetGroup.Android, BuildTarget.Android);
+            throw new BuildFailedException(
+                "Active build target is not Android. Switch to Android in Build Profiles, wait for Unity to reload, then run OR RoomScan > Build Quest 3 APK again.");
 
         var scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled && !string.IsNullOrWhiteSpace(s.path) && File.Exists(s.path))
