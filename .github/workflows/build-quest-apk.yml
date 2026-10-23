@@ -29,6 +29,21 @@ jobs:
             exit 1
           fi
 
+      - name: Configure optional Meta UPM authentication
+        shell: bash
+        env:
+          META_UPM_TOKEN: ${{ secrets.META_UPM_TOKEN }}
+        run: |
+          if [ -n "$META_UPM_TOKEN" ]; then
+            mkdir -p "$HOME"
+            cat > "$HOME/.upmconfig.toml" <<EOF
+          [npmAuth."https://npm.developer.oculus.com"]
+          alwaysAuth = true
+          token = "$META_UPM_TOKEN"
+          EOF
+            chmod 600 "$HOME/.upmconfig.toml"
+          fi
+
       - name: Build Android APK
         uses: game-ci/unity-builder@v4
         env:
