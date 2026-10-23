@@ -59,5 +59,16 @@ assert.ok(Math.abs(parsed[0].w - 1) < 1e-9, "DXF mm width converts to 1 m");
 assert.ok(Math.abs(parsed[0].d - 0.6) < 1e-9, "DXF mm depth converts to 0.6 m");
 assert.equal(parsed[0].vertices.length, 4, "closed rectangle has four footprint vertices");
 assert.equal(parsed[0].layer, "CABINET", "DXF layer metadata is retained");
+const secondOutline = [
+  "0","LWPOLYLINE","8","SINK","70","1",
+  "10","1500","20","0","10","2500","20","0",
+  "10","2500","20","600","10","1500","20","600"
+].join("\\n");
+const multiDxf = sampleDxf.replace("0\\nENDSEC", secondOutline + "\\n0\\nENDSEC");
+const multiParsed = dxfMath.parse(multiDxf, dxfMath.scale.mm);
+assert.equal(multiParsed.length, 2, "two closed outlines in one DXF should parse");
+assert.ok(Math.abs(multiParsed[1].offsetX - 1.5) < 1e-9, "second outline preserves its original 1.5 m relative X placement");
+assert.ok(Math.abs(multiParsed[1].offsetY) < 1e-9, "second outline preserves its original relative Y placement");
+assert.ok(scriptMatch[1].includes("x:ox+s.offsetX,y:oy+s.offsetY"), "DXF import preserves relative placement between outlines");
 assert.throws(() => dxfMath.parse("0\nSECTION\n2\nENTITIES\n0\nENDSEC\n0\nEOF", 0.001), /找不到有效封閉/, "rejects DXF with no closed polyline");
 console.log("PASS: DXF closed-polyline parsing, mm-to-m conversion, footprint vertices, layer metadata, and invalid-file rejection.");
