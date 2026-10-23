@@ -21,7 +21,7 @@ assert.ok(scriptMatch[1].includes("room.polygon"), "room renderer supports arbit
 assert.ok(scriptMatch[1].includes("牆段輪廓無效"), "custom wall boundary validation exists");
 assert.ok(scriptMatch[1].includes("room.polygon.map(p=>p.x+','+p.y).join"), "custom wall vertices are restored in load/import UI");
 const areaStart = scriptMatch[1].indexOf("function polygonArea(poly){");
-const areaEnd = scriptMatch[1].indexOf("\\nfunction volume()", areaStart);
+const areaEnd = scriptMatch[1].indexOf("\nfunction volume()", areaStart);
 assert.ok(areaStart >= 0 && areaEnd > areaStart, "polygon area calculation exists");
 const areaSource = scriptMatch[1].slice(areaStart, areaEnd);
 const polyMath = {};
