@@ -19,6 +19,7 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
     private bool busy;
     private bool previousPrimary;
     private bool previousSecondary;
+    private bool scanInProgress;
     private string status = "Ready. A/X: start scan; B/Y: finish and save.";
     private Text hudText;
     private RoomScanSession session;
@@ -68,6 +69,7 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
                 if (session == null) throw new InvalidOperationException("RoomScanSession is missing. Run the Game-Ready Setup wizard.");
                 SetStatus("Starting scan… keep the headset steady for a moment.");
                 await session.StartScanAsync();
+                scanInProgress = true;
                 SetStatus("Scanning. Slowly look around the room. Press B/Y to finish and save.");
             });
         }
@@ -78,8 +80,14 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
             {
                 session = RoomScanSession.Instance;
                 if (session == null) throw new InvalidOperationException("RoomScanSession is missing. Run the Game-Ready Setup wizard.");
+                if (!scanInProgress)
+                {
+                    SetStatus("No active scan to save. Press A/X to start scanning first.");
+                    return;
+                }
                 SetStatus("Finishing scan, refining mesh and saving. This may take several minutes…");
                 var result = await session.FinalizeScanAsync();
+                scanInProgress = false;
                 string id = string.IsNullOrWhiteSpace(result.PackageId) ? "(package ID unavailable)" : result.PackageId;
                 SetStatus($"Saved scan: {id}\nPress A/X to start a new scan.");
             });
@@ -128,6 +136,8 @@ public sealed class RoomScanRuntimeController : MonoBehaviour
         textRect.offsetMax = new Vector2(-24f, -16f);
         hudText = textObject.GetComponent<Text>();
         hudText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        if (hudText.font == null)
+            hudText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         hudText.fontSize = 30;
         hudText.color = Color.white;
         hudText.alignment = TextAnchor.MiddleLeft;
