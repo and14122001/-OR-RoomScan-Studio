@@ -43,7 +43,7 @@ let objects=[],nextObjectId=1;
 const DXF_UNIT_SCALE={mm:.001,cm:.01,m:1,in:.0254,ft:.3048};
 function parseClosedDxfPolylines(text,scale){
  if(typeof text!=='string'||text.length>20000000)throw Error('DXF 檔案無效或超過 20 MB');
- const lines=text.replace(/^\\uFEFF/,'').split(/\\r?\\n/);if(lines.at(-1)?.trim()==='')lines.pop();if(lines.length<4||lines.length%2!==0)throw Error('不是有效的 ASCII DXF 群組碼檔案');
+ const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/);if(lines.at(-1)?.trim()==='')lines.pop();if(lines.length<4||lines.length%2!==0)throw Error('不是有效的 ASCII DXF 群組碼檔案');
  const pairs=[];for(let i=0;i<lines.length;i+=2){const code=Number(lines[i].trim());if(Number.isInteger(code))pairs.push([code,lines[i+1].trim()])}
  let inside=false,cur=null;const ents=[];
  for(const [code,val] of pairs){if(code===0&&val==='SECTION'){cur=null;continue}if(code===2&&val==='ENTITIES'){inside=true;continue}if(code===0&&val==='ENDSEC'){if(cur)ents.push(cur);cur=null;inside=false;continue}if(!inside)continue;if(code===0){if(cur)ents.push(cur);cur={kind:val,fields:[]}}else if(cur)cur.fields.push([code,val])}
