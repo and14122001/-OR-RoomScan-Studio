@@ -49,6 +49,10 @@ public static class ORRoomScanBuild
             throw new BuildFailedException(
                 "Build scenes are missing RoomScanSession, RoomScanner, or RoomScanRuntimeController. Run RoomScan > Setup Scene > Apply Game-Ready Setup, then OR RoomScan > Prepare Scene For APK.");
 
+        PlayerSettings.companyName = "OR RoomScan Studio";
+        PlayerSettings.productName = "OR RoomScan Studio";
+        PlayerSettings.applicationIdentifier = "com.and14122001.orroomscanstudio";
+        PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel29;
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
