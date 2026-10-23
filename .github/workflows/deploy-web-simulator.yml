@@ -1,0 +1,40 @@
+name: Deploy Browser Virtual Lab
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy-web-simulator.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Validate standalone simulator
+        run: |
+          test -s web/index.html
+          grep -q 'id="room"' web/index.html
+          grep -q 'id="runTests"' web/index.html
+          grep -q 'simulationOnly:true' web/index.html
+          grep -q 'Quest 3' web/index.html
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
