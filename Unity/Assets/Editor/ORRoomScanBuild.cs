@@ -66,6 +66,7 @@ public static class ORRoomScanBuild
             scenes = scenes,
             locationPathName = outputPath,
             target = BuildTarget.Android,
+            targetGroup = BuildTargetGroup.Android,
             options = BuildOptions.None
         };
 
