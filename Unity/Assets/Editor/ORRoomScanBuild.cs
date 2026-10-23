@@ -31,17 +31,23 @@ public static class ORRoomScanBuild
 
         // Load each build scene temporarily to confirm the actual QRS runtime
         // components exist. Build must not pass with a blank template scene.
-        foreach (var scenePath in scenes)
+        for (int i = 0; i < scenes.Length; i++)
         {
-            var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
-                scenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
-            var session = UnityEngine.Object.FindFirstObjectByType<RoomScanSession>();
-            var scanner = UnityEngine.Object.FindFirstObjectByType<RoomScanner>();
-            var controller = UnityEngine.Object.FindFirstObjectByType<RoomScanRuntimeController>();
-            if (session == null || scanner == null || controller == null)
-                throw new BuildFailedException(
-                    $"Scene '{scenePath}' is missing RoomScanSession, RoomScanner, or RoomScanRuntimeController. Run the Game-Ready Setup wizard, then OR RoomScan > Attach Runtime Controller To Active Scene, save the scene, and add it to Build Settings.");
+            string scenePath = scenes[i];
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
+                scenePath,
+                i == 0
+                    ? UnityEditor.SceneManagement.OpenSceneMode.Single
+                    : UnityEditor.SceneManagement.OpenSceneMode.Additive);
         }
+
+        // Validate the assembled build scene set after all scenes are loaded.
+        var session = UnityEngine.Object.FindFirstObjectByType<RoomScanSession>();
+        var scanner = UnityEngine.Object.FindFirstObjectByType<RoomScanner>();
+        var controller = UnityEngine.Object.FindFirstObjectByType<RoomScanRuntimeController>();
+        if (session == null || scanner == null || controller == null)
+            throw new BuildFailedException(
+                "Build scenes are missing RoomScanSession, RoomScanner, or RoomScanRuntimeController. Run RoomScan > Setup Scene > Apply Game-Ready Setup, then OR RoomScan > Prepare Scene For APK.");
 
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
