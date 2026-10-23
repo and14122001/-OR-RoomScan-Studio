@@ -31,3 +31,10 @@ Run the built-in `執行測試` panel in the browser. The repository also includ
 2. Under **Build and deployment**, set **Source** to **GitHub Actions** and save.
 3. Open **Actions → Deploy Browser Virtual Lab** and re-run the latest workflow, or push a later change under `web/`.
 4. The current deployment URL is https://and14122001.github.io/-OR-RoomScan-Studio/. The latest successful deploy is listed in GitHub Actions.
+
+## CAD 2D-to-3D import (prototype)
+- Import ASCII DXF files containing closed `LWPOLYLINE` outlines.
+- Explicitly select source units (mm/cm/m/in/ft), extrusion height in meters, placement XYZ, and fixture category.
+- Closed outlines are converted to parameterized 3D prism footprints. Original filename and DXF layer are stored with each model and preserved in session JSON.
+- Current scope does not infer heights, close open contours, or reconstruct solids from text, blocks, arcs/circles, splines, or arbitrary LINE segments. Convert the intended equipment footprint to a closed polyline in CAD and verify scale/position after import.
+- This is a browser prototype; it does not yet replace a full CAD/BIM kernel or Quest 3 scan-to-mesh pipeline.
