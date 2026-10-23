@@ -23,10 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Validate standalone simulator
         run: |
           test -s web/index.html
@@ -35,6 +31,8 @@ jobs:
           grep -q 'id="runTests"' web/index.html
           grep -q 'simulationOnly:true' web/index.html
           grep -q 'Quest 3' web/index.html
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
