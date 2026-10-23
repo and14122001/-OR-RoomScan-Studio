@@ -18,12 +18,12 @@
 - Any metrology accuracy claim.
 
 ## What blocks a real APK right now
-This repo cannot truthfully be called installable until the Unity Editor completes Meta-specific project setup and an Android build succeeds. The GitHub Actions workflow also needs Unity licensing secrets (`UNITY_LICENSE`, or `UNITY_EMAIL` and `UNITY_PASSWORD`). Once the scene and project settings have been generated and committed from Unity Editor, run **Actions → Build Quest 3 APK → Run workflow** and inspect the build log/artifact.
+This repo cannot truthfully be called installable until the Unity Editor completes Meta-specific project setup and an Android build succeeds. The GitHub Actions workflow needs Unity licensing secrets (`UNITY_LICENSE`, or `UNITY_EMAIL` and `UNITY_PASSWORD`). If Meta's UPM registry requires authentication for this account, also configure `META_UPM_TOKEN`. Once the scene and project settings have been generated and committed from Unity Editor, run **Actions → Build Quest 3 APK → Run workflow** and inspect the build log/artifact.
 
 ## Minimum local handoff needed
 1. Install Unity 6.2+ with Android Build Support, Android SDK & NDK Tools, and OpenJDK.
 2. Open the `Unity/` folder and let packages resolve; resolve any package-manager errors without silently changing the QuestRoomScan pin.
-3. Install the Meta XR SDK / Meta OpenXR packages using Meta's official setup instructions.
+3. Let Package Manager resolve the pinned Meta XR Core/OpenXR dependencies. If the registry denies access, sign in/accept the SDK license in Unity and configure the required Meta package authentication; do not blindly upgrade package versions.
 4. Run QuestRoomScan's Game-Ready Setup wizard, then use **OR RoomScan > Prepare Scene For APK**. Save/commit the generated scene and project settings into this repo; the preparation menu adds the scene to Build Settings.
 5. Build Android ARM64 APK locally or configure the GitHub Actions license secrets and run **Actions → Build Quest 3 APK → Run workflow**.
 6. Install on Quest 3 and capture evidence (build log, app launch, passthrough, scan/save/load test).
