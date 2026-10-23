@@ -48,4 +48,4 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Added ASCII DXF import for closed `LWPOLYLINE` outlines; explicit unit conversion, extrusion height, XYZ placement, fixture category, and source layer/file metadata.
 - Imported footprints render as extruded 3D prisms and persist with session JSON/local save. Parser rejects missing/invalid closed outlines and applies size/boundary checks.
 - Regression tests now exercise a 1000 × 600 mm closed cabinet footprint converting to 1.0 × 0.6 m, preserving the layer, and rejecting a file with no closed outline.
-- Commit: `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5` (parser fix); test commit `252cebc945c75d8e4d15e084e1816c60622aa079`. Verify the latest CI before marking the DXF feature tested.
+- Implementation commits: `be35f56887ee0c8054290e7682f130c83778dce7` and parser fix `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5`. Regression tests were fixed and passed in [run 39902550352](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550352). Pages redeployment is running in [run 39902550370](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550370).
