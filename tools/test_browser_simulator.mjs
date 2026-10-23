@@ -47,7 +47,7 @@ assert.ok(scriptMatch[1].includes("sourceLayer:s.layer"), "CAD source layer is p
 const parserMatch = scriptMatch[1].match(/const DXF_UNIT_SCALE=\{[^}]+\};\s*function parseClosedDxfPolylines[\s\S]*?\n\}/);
 assert.ok(parserMatch, "DXF parser source can be isolated for functional testing");
 const dxfMath = {};
-vm.runInNewContext(parserMatch[0] + "\ndxfMath.parse=parseClosedDxfPolylines; dxfMath.scale=DXF_UNIT_SCALE;", dxfMath);
+vm.runInNewContext(parserMatch[0] + "\nglobalThis.parse=parseClosedDxfPolylines; globalThis.scale=DXF_UNIT_SCALE;", dxfMath);
 const sampleDxf = [
   "0","SECTION","2","ENTITIES","0","LWPOLYLINE","8","CABINET",
   "70","1","10","0","20","0","10","1000","20","0",
