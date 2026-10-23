@@ -24,6 +24,9 @@ assert.equal(math.pointDistance({x:0,y:0,z:0},{x:3,y:4,z:12}), 13, "3D Euclidean
 assert.equal(Math.round(1.234 * 1000), 1234, "meters to millimeters conversion");
 assert.ok(html.includes("simulationOnly:true"), "exported sessions explicitly identify as simulated");
 assert.ok(html.includes("s.simulationOnly!==true"), "JSON import rejects sessions without simulation marker");
+assert.ok(scriptMatch[1].includes("本機房間尺寸超出允許範圍"), "local save loading validates room dimensions");
+assert.ok(scriptMatch[1].includes("本機量測點座標無效或超出房間邊界"), "local save loading validates point bounds");
+assert.ok(scriptMatch[1].includes("s.simulationOnly!==true"), "local save loading requires simulation-only marker");
 assert.ok(html.includes("Quest 3 實機"), "hardware test limitation is disclosed");
 assert.ok(/function startScan\(\)[^}]*requestAnimationFrame\(tick\)/.test(scriptMatch[1]), "scan animation starts with a browser-provided timestamp");
 assert.ok(!/function startScan\(\)[^}]*;tick\(\)/.test(scriptMatch[1]), "scan animation does not invoke tick without a timestamp");
