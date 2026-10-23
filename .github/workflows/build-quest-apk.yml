@@ -39,11 +39,12 @@ jobs:
           buildsPath: build
           buildName: ORRoomScanStudio
           allowDirtyBuild: true
+          customParameters: -executeMethod ORRoomScanBuild.BuildAndroid
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: OR-RoomScan-Studio-Quest3-APK
-          path: build/Android/**/*.apk
+          path: Unity/Build/Android/**/*.apk
           if-no-files-found: error
           retention-days: 14
