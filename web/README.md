@@ -12,8 +12,9 @@ Open `index.html` in a modern browser. No dependencies, server, API key, login, 
 - Editable room dimensions and volume calculation
 - Simulated scan progress (not connected to a camera, depth sensor, or headset)
 - Browser-local save/load using `localStorage`
-- CSV point export and JSON session export
-- Built-in checks for volume, unit conversion, point bounds, session schema, and serialization
+- CSV point export, JSON session export, and validated JSON session import
+- Live 3D Euclidean distance between the first two synthetic measurement points
+- Built-in checks for volume, unit conversion, 3D point distance, point bounds, session schema, and serialization
 - Honest status panel linking to the Unity build instructions and status
 
 ## Limitations
