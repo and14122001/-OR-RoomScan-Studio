@@ -32,6 +32,7 @@ assert.equal(polyMath.area([{x:0,y:0},{x:4,y:0},{x:3,y:2},{x:0,y:2}]), 7, "non-r
 assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行建模"), "plan-angled wall and vertical-profile slope are distinguished");
 assert.ok(html.includes("pdfjsLib.getDocument"), "PDF.js loads PDF documents");
 assert.ok(scriptMatch[1].includes("PDF-traced"), "PDF traced geometry retains source provenance");
+assert.ok(scriptMatch[1].includes("x:ox,y:oy,z:oz,w,d,h:height,vertices"), "PDF page coordinates are normalized and placed at the user-defined origin");
 assert.ok(scriptMatch[1].includes("pdfMetersPerPx"), "PDF workflow requires scale calibration");
 assert.ok(scriptMatch[1].includes("pdfPoly.length>=50"), "PDF outline vertex count is bounded");
 assert.ok(html.includes("pdf.worker.min.js"), "PDF.js worker is configured");
