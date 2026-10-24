@@ -36,6 +36,16 @@ assert.ok(scriptMatch[1].includes("x:ox,y:oy,z:oz,w,d,h:height,vertices"), "PDF 
 assert.ok(html.includes('id="pdfSnapEdges"'), "PDF tracing exposes optional edge snapping control");
 assert.ok(scriptMatch[1].includes("function pdfSnapToEdge(p)"), "PDF tracing includes local contrast-based edge snapping");
 assert.ok(scriptMatch[1].includes("pdfSnapToEdge(p)"), "edge snapping is invoked during tracing");
+const polygonMatch = scriptMatch[1].match(/function pdfPolygonMetrics\\(vertices\\)\\{[\\s\\S]*?\\n\\}/);
+assert.ok(polygonMatch, "PDF polygon validation and metrics function exists");
+const polygonCtx = {};
+vm.runInNewContext(polygonMatch[0] + ";globalThis.metrics=pdfPolygonMetrics;", polygonCtx);
+const squareMetrics = polygonCtx.metrics([{x:0,y:0},{x:2,y:0},{x:2,y:3},{x:0,y:3}]);
+assert.ok(Math.abs(squareMetrics.area-6)<1e-9, "PDF polygon footprint area is calculated correctly");
+assert.ok(Math.abs(squareMetrics.perimeter-10)<1e-9, "PDF polygon perimeter is calculated correctly");
+assert.throws(() => polygonCtx.metrics([{x:0,y:0},{x:2,y:2},{x:0,y:2},{x:2,y:0}]), /交叉|重疊/, "self-intersecting PDF contour is rejected");
+assert.ok(scriptMatch[1].includes("metrics.area.toFixed(3)"), "PDF build report displays footprint area");
+
 assert.ok(scriptMatch[1].includes("pdfMetersPerPx"), "PDF workflow requires scale calibration");
 assert.ok(scriptMatch[1].includes("pdfPoly.length>=50"), "PDF outline vertex count is bounded");
 assert.ok(html.includes("pdf.worker.min.js"), "PDF.js worker is configured");
