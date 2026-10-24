@@ -122,11 +122,11 @@ $('reset').onclick=()=>{running=false;cancelAnimationFrame(raf);$('start').disab
 $('addPoint').onclick=()=>{if(points.length>=100){log('最多 100 個模擬點。');return}points.push({x:room.w/2,y:room.l/2,z:0});renderPoints();draw();log('新增模擬量測點。')};
 $('removePoint').onclick=()=>{if(points.length<=1){log('至少保留一個量測點。');return}points.pop();renderPoints();draw();log('已移除最後一個量測點。')};
 
-let pdfDoc=null,pdfPageObj=null,pdfScale=1,pdfMode='idle',pdfClicks=[],pdfPoly=[],pdfMetersPerPx=0,pdfDetectedLines=[];
+let pdfDoc=null,pdfPageObj=null,pdfScale=1,pdfMode='idle',pdfClicks=[],pdfPoly=[],pdfMetersPerPx=0,pdfDetectedLines=[],pdfCalibrationChecks=[];
 const pdfCanvas=$('pdfCanvas'),pdfCtx=pdfCanvas.getContext('2d');
 function pdfStatus(s){$('pdfReport').textContent=s}
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-$('loadPdf').onclick=async()=>{try{if(!window.pdfjsLib)throw Error('PDF.js 載入失敗，請確認網路後重新整理');const f=$('pdfFile').files[0];if(!f)throw Error('請先選擇 PDF');if(f.size>50000000)throw Error('PDF 不可超過 50 MB');pdfDoc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;const n=+$('pdfPage').value;if(!Number.isInteger(n)||n<1||n>pdfDoc.numPages)throw Error('頁碼無效，共 '+pdfDoc.numPages+' 頁');pdfPageObj=await pdfDoc.getPage(n);pdfScale=Math.min(2,1400/pdfPageObj.getViewport({scale:1}).width);const v=pdfPageObj.getViewport({scale:pdfScale});pdfCanvas.width=Math.round(v.width);pdfCanvas.height=Math.round(v.height);await pdfPageObj.render({canvasContext:pdfCtx,viewport:v}).promise;pdfMode='idle';pdfClicks=[];pdfPoly=[];pdfMetersPerPx=0;pdfDetectedLines=[];$('pdfBaseline').innerHTML='<option value="">請先分析線條</option>';pdfStatus('PDF 第 '+n+' 頁已載入。先自動識別線條，再選基準線校正比例。')}catch(e){pdfStatus('載入失敗：'+e.message)}};
+$('loadPdf').onclick=async()=>{try{if(!window.pdfjsLib)throw Error('PDF.js 載入失敗，請確認網路後重新整理');const f=$('pdfFile').files[0];if(!f)throw Error('請先選擇 PDF');if(f.size>50000000)throw Error('PDF 不可超過 50 MB');pdfDoc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;const n=+$('pdfPage').value;if(!Number.isInteger(n)||n<1||n>pdfDoc.numPages)throw Error('頁碼無效，共 '+pdfDoc.numPages+' 頁');pdfPageObj=await pdfDoc.getPage(n);pdfScale=Math.min(2,1400/pdfPageObj.getViewport({scale:1}).width);const v=pdfPageObj.getViewport({scale:pdfScale});pdfCanvas.width=Math.round(v.width);pdfCanvas.height=Math.round(v.height);await pdfPageObj.render({canvasContext:pdfCtx,viewport:v}).promise;pdfMode='idle';pdfClicks=[];pdfPoly=[];pdfMetersPerPx=0;pdfDetectedLines=[];pdfCalibrationChecks=[];$('pdfBaseline').innerHTML='<option value="">請先分析線條</option>';pdfStatus('PDF 第 '+n+' 頁已載入。先自動識別線條，再選基準線校正比例。')}catch(e){pdfStatus('載入失敗：'+e.message)}};
 function pdfDetectStraightLines(){
  if(!pdfDoc)throw Error('請先載入 PDF');
  const w=pdfCanvas.width,h=pdfCanvas.height,data=pdfCtx.getImageData(0,0,w,h).data;
@@ -160,8 +160,16 @@ $('pdfCalibrate').onclick=()=>{
  if(!pdfDoc)return pdfStatus('請先載入 PDF');
  const line=pdfDetectedLines[Number($('pdfBaseline').value)],m=+$('pdfKnownLength').value;
  if(!line||!Number.isFinite(m)||m<=0)return pdfStatus('請先分析線條、選擇基準線並輸入正確實際長度');
- pdfMetersPerPx=m/line.len;pdfMode='idle';pdfClicks=[{x:line.x1,y:line.y1},{x:line.x2,y:line.y2}];
- pdfRedraw();pdfStatus('基準線校正完成：'+pdfMetersPerPx.toPrecision(6)+' 公尺／像素；線長 '+line.len.toFixed(1)+' px。請確認線條對應正確標註尺寸。');
+ const candidateScale=m/line.len;
+ if(pdfCalibrationChecks.length){
+  const scales=pdfCalibrationChecks.map(c=>c.scale).concat(candidateScale),mean=scales.reduce((a,b)=>a+b,0)/scales.length;
+  const spread=(Math.max(...scales)-Math.min(...scales))/mean;
+  if(spread>.02){pdfStatus('基準線交叉校驗不一致（比例差 '+(spread*100).toFixed(2)+'%）。請檢查所選線是否對應正確標註；本次不納入校正。');return}
+ }
+ pdfCalibrationChecks.push({scale:candidateScale,length:m,pixels:line.len,view:$('pdfViewType').value});
+ pdfMetersPerPx=pdfCalibrationChecks.reduce((sum,c)=>sum+c.scale,0)/pdfCalibrationChecks.length;
+ pdfMode='idle';pdfClicks=[{x:line.x1,y:line.y1},{x:line.x2,y:line.y2}];
+ pdfRedraw();pdfStatus('基準線校正 '+pdfCalibrationChecks.length+' 條；綜合比例 '+pdfMetersPerPx.toPrecision(6)+' 公尺／像素。已知尺寸交叉差異須 ≤2%；請確認各線的實際標註值。');
 };
 $('pdfTrace').onclick=()=>{if(!pdfDoc||pdfMetersPerPx<=0)return pdfStatus('請先載入 PDF 並完成比例校正');pdfMode='trace';pdfPoly=[];pdfStatus('依序點選輪廓的每個轉角；完成後按「完成輪廓」。最多 50 點。')};
 $('pdfUndo').onclick=()=>{if(pdfMode==='trace'&&pdfPoly.length)pdfPoly.pop();else if(pdfMode==='calibrate'&&pdfClicks.length)pdfClicks.pop();pdfRedraw()};
