@@ -9,13 +9,15 @@ new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
-for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport", "pdfImport", "pdfFile", "pdfPage", "pdfKnownLength", "pdfHeight", "loadPdf", "pdfCalibrate", "pdfTrace", "pdfUndo", "pdfClose", "pdfBuild", "pdfCanvas", "pdfReport"]) {
+for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport", "pdfImport", "pdfFile", "pdfPage", "pdfKnownLength", "pdfHeight", "loadPdf", "pdfCalibrate", "pdfTrace", "pdfUndo", "pdfClose", "pdfBuild", "pdfCanvas", "pdfReport", "pdfDetectLines", "pdfBaseline", "pdfViewType", "pdfSaveView", "pdfViewRegistry"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
 }
 
 assert.ok(scriptMatch[1].includes("function pdfDetectStraightLines()"), "PDF straight-line detector exists");
 assert.ok(scriptMatch[1].includes("candidateScale=m/line.len"), "baseline calibration uses selected detected line length");
 assert.ok(scriptMatch[1].includes("pdfDrawDetectedLines()"), "detected baseline overlay is rendered");
+assert.ok(scriptMatch[1].includes("function pdfRenderViewRegistry()"), "plan/elevation calibration registry exists");
+assert.ok(scriptMatch[1].includes("尚未自動合併 3D"), "multi-view registry does not claim automatic 3D fusion");
 const volumeStart = scriptMatch[1].indexOf("function polygonArea(poly){");
 const volumeEnd = scriptMatch[1].indexOf("\nfunction parseRoomPolygon", volumeStart);
 const volumeSource = volumeStart >= 0 && volumeEnd > volumeStart ? scriptMatch[1].slice(volumeStart, volumeEnd) : null;
