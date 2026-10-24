@@ -37,7 +37,7 @@ assert.ok(html.includes('id="pdfSnapEdges"'), "PDF tracing exposes optional edge
 assert.ok(scriptMatch[1].includes("function pdfSnapToEdge(p)"), "PDF tracing includes local contrast-based edge snapping");
 assert.ok(scriptMatch[1].includes("pdfSnapToEdge(p)"), "edge snapping is invoked during tracing");
 const polygonStart = scriptMatch[1].indexOf("function pdfPolygonMetrics");
-const polygonEnd = scriptMatch[1].indexOf("\\n$('pdfBuild')", polygonStart);
+const polygonEnd = scriptMatch[1].indexOf("\n$('pdfBuild')", polygonStart);
 assert.ok(polygonStart >= 0 && polygonEnd > polygonStart, "PDF polygon validation and metrics function exists");
 const polygonCtx = {};
 vm.runInNewContext(scriptMatch[1].slice(polygonStart, polygonEnd) + ";globalThis.metrics=pdfPolygonMetrics;", polygonCtx);
