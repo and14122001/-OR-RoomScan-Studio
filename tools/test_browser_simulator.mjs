@@ -14,7 +14,7 @@ for (const id of ["room", "width", "length", "height", "start", "finish", "save"
 }
 
 assert.ok(scriptMatch[1].includes("function pdfDetectStraightLines()"), "PDF straight-line detector exists");
-assert.ok(scriptMatch[1].includes("pdfMetersPerPx=m/line.len"), "baseline calibration uses selected detected line length");
+assert.ok(scriptMatch[1].includes("candidateScale=m/line.len"), "baseline calibration uses selected detected line length");
 assert.ok(scriptMatch[1].includes("pdfDrawDetectedLines()"), "detected baseline overlay is rendered");
 const volumeStart = scriptMatch[1].indexOf("function polygonArea(poly){");
 const volumeEnd = scriptMatch[1].indexOf("\nfunction parseRoomPolygon", volumeStart);
