@@ -11,11 +11,11 @@ const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
 for (const id of ["room", "width", "length", "height", "start", "finish", "save", "load", "csv", "json", "importJson", "importFile", "pointDistance", "runTests", "objectLibrary", "objName", "objType", "objX", "objY", "objZ", "objW", "objD", "objH", "addObject", "objectList", "objectCount", "cadImport", "cadFile", "cadUnits", "cadHeight", "cadRotation", "cadOffsetX", "cadOffsetY", "cadOffsetZ", "cadCategory", "importDxf", "cadReport", "roomBoundaryEditor", "roomPolygon", "applyPolygon", "polygonReport", "pdfImport", "pdfFile", "pdfPage", "pdfKnownLength", "pdfHeight", "loadPdf", "pdfCalibrate", "pdfTrace", "pdfUndo", "pdfClose", "pdfBuild", "pdfCanvas", "pdfReport"]) {
   assert.ok(ids.includes(id), "required UI control exists: " + id);
+}
+
 assert.ok(scriptMatch[1].includes("function pdfDetectStraightLines()"), "PDF straight-line detector exists");
 assert.ok(scriptMatch[1].includes("pdfMetersPerPx=m/line.len"), "baseline calibration uses selected detected line length");
 assert.ok(scriptMatch[1].includes("pdfDrawDetectedLines()"), "detected baseline overlay is rendered");
-}
-
 const volumeStart = scriptMatch[1].indexOf("function polygonArea(poly){");
 const volumeEnd = scriptMatch[1].indexOf("\nfunction parseRoomPolygon", volumeStart);
 const volumeSource = volumeStart >= 0 && volumeEnd > volumeStart ? scriptMatch[1].slice(volumeStart, volumeEnd) : null;
