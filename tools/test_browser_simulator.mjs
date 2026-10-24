@@ -36,10 +36,11 @@ assert.ok(scriptMatch[1].includes("x:ox,y:oy,z:oz,w,d,h:height,vertices"), "PDF 
 assert.ok(html.includes('id="pdfSnapEdges"'), "PDF tracing exposes optional edge snapping control");
 assert.ok(scriptMatch[1].includes("function pdfSnapToEdge(p)"), "PDF tracing includes local contrast-based edge snapping");
 assert.ok(scriptMatch[1].includes("pdfSnapToEdge(p)"), "edge snapping is invoked during tracing");
-const polygonMatch = scriptMatch[1].match(/function pdfPolygonMetrics\\(vertices\\)\\{[\\s\\S]*?\\n\\}/);
-assert.ok(polygonMatch, "PDF polygon validation and metrics function exists");
+const polygonStart = scriptMatch[1].indexOf("function pdfPolygonMetrics");
+const polygonEnd = scriptMatch[1].indexOf("\\n$('pdfBuild')", polygonStart);
+assert.ok(polygonStart >= 0 && polygonEnd > polygonStart, "PDF polygon validation and metrics function exists");
 const polygonCtx = {};
-vm.runInNewContext(polygonMatch[0] + ";globalThis.metrics=pdfPolygonMetrics;", polygonCtx);
+vm.runInNewContext(scriptMatch[1].slice(polygonStart, polygonEnd) + ";globalThis.metrics=pdfPolygonMetrics;", polygonCtx);
 const squareMetrics = polygonCtx.metrics([{x:0,y:0},{x:2,y:0},{x:2,y:3},{x:0,y:3}]);
 assert.ok(Math.abs(squareMetrics.area-6)<1e-9, "PDF polygon footprint area is calculated correctly");
 assert.ok(Math.abs(squareMetrics.perimeter-10)<1e-9, "PDF polygon perimeter is calculated correctly");
