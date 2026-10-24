@@ -33,6 +33,9 @@ assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行�
 assert.ok(html.includes("pdfjsLib.getDocument"), "PDF.js loads PDF documents");
 assert.ok(scriptMatch[1].includes("PDF-traced"), "PDF traced geometry retains source provenance");
 assert.ok(scriptMatch[1].includes("x:ox,y:oy,z:oz,w,d,h:height,vertices"), "PDF page coordinates are normalized and placed at the user-defined origin");
+assert.ok(html.includes('id="pdfSnapEdges"'), "PDF tracing exposes optional edge snapping control");
+assert.ok(scriptMatch[1].includes("function pdfSnapToEdge(p)"), "PDF tracing includes local contrast-based edge snapping");
+assert.ok(scriptMatch[1].includes("pdfSnapToEdge(p)"), "edge snapping is invoked during tracing");
 assert.ok(scriptMatch[1].includes("pdfMetersPerPx"), "PDF workflow requires scale calibration");
 assert.ok(scriptMatch[1].includes("pdfPoly.length>=50"), "PDF outline vertex count is bounded");
 assert.ok(html.includes("pdf.worker.min.js"), "PDF.js worker is configured");
