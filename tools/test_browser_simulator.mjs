@@ -129,9 +129,9 @@ assert.ok(roomGeometryStart >= 0 && roomGeometryEnd > roomGeometryStart, "room b
 const roomGeometrySource = scriptMatch[1].slice(roomGeometryStart, roomGeometryEnd);
 const roomGeometryCtx = { room: { w: 4, l: 6 } };
 vm.runInNewContext(roomGeometrySource + ";globalThis.parseRoomPolygon=parseRoomPolygon;globalThis.polygonSelfIntersects=polygonSelfIntersects;", roomGeometryCtx);
-assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\\n4,0\\n4,6\\n0,6").length, 4, "valid rectangular room boundary is accepted");
-assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\\n4,0\\n3,2\\n0,2").length, 4, "valid concave/angled footprint is accepted");
-assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\\n4,4\\n0,4\\n4,0"), /自交|重疊/, "bow-tie room boundary is rejected");
-assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\\n4,0\\n4,0\\n0,6"), /不可重複|自交|重疊/, "duplicate room vertices are rejected");
-assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\\n5,0\\n5,6\\n0,6"), /超出/, "room boundary outside configured dimensions is rejected");
+assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\n4,0\n4,6\n0,6").length, 4, "valid rectangular room boundary is accepted");
+assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\n4,0\n3,2\n0,2").length, 4, "valid concave/angled footprint is accepted");
+assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\n4,4\n0,4\n4,0"), /自交|重疊/, "bow-tie room boundary is rejected");
+assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\n4,0\n4,0\n0,6"), /不可重複|自交|重疊/, "duplicate room vertices are rejected");
+assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\n5,0\n5,6\n0,6"), /超出/, "room boundary outside configured dimensions is rejected");
 console.log("PASS: room polygon validation rejects self-intersection, duplicate/zero-length edges, and out-of-bounds vertices while accepting valid angled footprints.");
