@@ -1,4 +1,4 @@
-# Build Status — 2026-10-23
+# Build Status — 2026-10-25
 
 ## Verified in GitHub
 - Unity project folder and package manifest are committed.
@@ -10,7 +10,7 @@
 - A repeatable ADB helper installs and launches the APK on an authorized Quest/Android device.
 - A manual GitHub Actions workflow runs repository preflight, then attempts the licensed Unity build and uploads the APK artifact.
 
-## Latest CI results (2026-10-23)
+## Latest CI results (2026-10-25)
 - Browser simulator validation workflow passed after adding local-session schema, dimension, and point-boundary checks: [run history](https://github.com/and14122001/-OR-RoomScan-Studio/actions).
 - GitHub Pages is enabled and deployment succeeded. Browser simulator is hosted at https://and14122001.github.io/-OR-RoomScan-Studio/.
 - DXF import preserves relative X/Y placement of multiple closed polylines in one file instead of stacking every footprint at the same insertion point; regression tests check two outlines and the 1.5 m source offset.
@@ -50,7 +50,7 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Added ASCII DXF import for closed `LWPOLYLINE` outlines; explicit unit conversion, extrusion height, XYZ placement, fixture category, and source layer/file metadata.
 - Imported footprints render as extruded 3D prisms and persist with session JSON/local save. Parser rejects missing/invalid closed outlines and applies size/boundary checks.
 - Regression tests now exercise a 1000 × 600 mm closed cabinet footprint converting to 1.0 × 0.6 m, preserving the layer, and rejecting a file with no closed outline.
-- Implementation commits: `be35f56887ee0c8054290e7682f130c83778dce7` and parser fix `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5`. Regression tests were fixed and passed in [run 39902550352](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550352). Pages redeployment is running in [run 39902550370](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550370).
+- Implementation commits: `be35f56887ee0c8054290e7682f130c83778dce7` and parser fix `6370109eb5cd57ad493a01ba5adfb54f3de0b4f5`. Regression tests were fixed and passed in [run 39902550352](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550352). Pages redeployment succeeded in [run 39902550370](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/39902550370).
 
 
 ## Multi-source modeling requirements (2026-10-23)
@@ -64,5 +64,16 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 
 - Added browser PDF import using PDF.js: select PDF/page, calibrate scale from a known dimension, manually trace up to 50 closed-footprint vertices, undo/close outline, set extrusion height and XYZ placement, and create a 3D prism with PDF filename/page provenance.
 - Supports vector and scanned/raster PDFs as rendered pages. It does not automatically vectorize the drawing, recognize dimensions, infer depth/height, or perform semantic 3D reconstruction. PDF.js currently loads from a CDN, so first use requires internet access.
-- Automated browser test workflow passed for the implementation commit; an additional regression run including PDF UI/parser assertions also passed. Latest Pages deployment for the updated test/docs commit is being checked separately.
+- Automated browser test workflow passed for the implementation and regression commits. Latest Pages deployment succeeded in [Deploy Browser Virtual Lab #65](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40047452151) on commit `0739569648d39cda243611e0203bfb3db2cdbebd`.
 - Engineering dimensions must be calibrated against confirmed drawing dimensions. No medical gas sizes, flow, pressures, or valve positions are inferred.
+
+
+## PDF calibration, contour validation, and multi-view records (2026-10-24)
+
+- Added raster-based candidate detection for long horizontal/vertical lines and a selectable detected baseline; scale is computed from candidate pixel length and a user-confirmed real-world length. Detection may include dimensions, text, or unrelated edges and is not semantic CAD recognition.
+- Added cross-checking of multiple baseline measurements on the current PDF page. If the new estimate differs from prior estimates by more than 2%, it is rejected; consistent estimates are averaged. These checks reduce calibration-entry errors but do not establish survey-grade accuracy.
+- Added optional local-contrast edge snapping while manually tracing a PDF footprint. Snapping is heuristic and must be visually verified.
+- Added polygon area/perimeter reporting and rejection of self-intersecting or degenerate outlines.
+- Added plan/elevation/section view-type records containing filename, page, scale, baseline-check count, and detected-line count. These records are reference metadata only: feature correspondence, cross-view registration, and automatic 3D fusion are not implemented.
+- Browser regression tests passed in [run 40047452127](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40047452127); Pages deployment succeeded in [run 40047452151](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40047452151).
+- Remaining geometry gap: vertical profiles of slanted walls, automatic wall/door/window/equipment classification, plan/elevation feature matching, and uncertainty/conflict reporting still require implementation.
