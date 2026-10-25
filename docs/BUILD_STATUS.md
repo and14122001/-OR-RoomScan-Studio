@@ -77,3 +77,10 @@ The app is a visualization and room-reconstruction prototype, not a certified su
 - Added plan/elevation/section view-type records containing filename, page, scale, baseline-check count, and detected-line count. These records are reference metadata only: feature correspondence, cross-view registration, and automatic 3D fusion are not implemented.
 - Browser regression tests passed in [run 40047452127](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40047452127); Pages deployment succeeded in [run 40047452151](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40047452151).
 - Remaining geometry gap: vertical profiles of slanted walls, automatic wall/door/window/equipment classification, plan/elevation feature matching, and uncertainty/conflict reporting still require implementation.
+
+
+## Browser test and source separation milestone (2026-10-25)
+
+- Added Playwright Chromium smoke tests covering page load, room-dimension update, fixture creation, the built-in test panel, and uncaught page errors. GitHub Actions run [40174588913](https://github.com/and14122001/-OR-RoomScan-Studio/actions/runs/40174588913) passed.
+- Split the browser simulator's inline styling and application logic into `web/styles.css` and `web/app.js`; `web/index.html` now loads those assets separately. Existing Node regression checks were updated to parse the external application script.
+- The current source split and regression suite are being validated by the latest CI run; do not consider the split fully accepted until the post-split CI run passes.
