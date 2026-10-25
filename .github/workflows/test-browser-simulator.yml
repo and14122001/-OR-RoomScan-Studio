@@ -32,7 +32,7 @@ jobs:
           node tools/test_browser_simulator.mjs
           grep -q 'id="room"' web/index.html
           grep -q 'id="runTests"' web/index.html
-          grep -q 'simulationOnly:true' web/index.html
+          grep -q 'simulationOnly:true' web/app.js
           grep -q 'Quest 3' web/index.html
       - name: Install Chromium test dependencies
         run: |
