@@ -13,7 +13,9 @@ Open `index.html` in a modern browser. The core room simulator needs no server, 
 - Simulated scan progress (not connected to a camera, depth sensor, or headset)
 - Browser-local save/load using `localStorage`
 - CSV point export, JSON session export, and validated JSON session import
-- Parameterized 3D box models for embedded equipment, fixed cabinets, counters, and other fixtures; each record stores name, category, XYZ position, width/depth/height, notes, and ID\n- Fixture models are rendered in the room wireframe and included in JSON save/load/import/export records\n- Live 3D Euclidean distance between the first two synthetic measurement points
+- Parameterized 3D box models for embedded equipment, fixed cabinets, counters, and other fixtures; each record stores name, category, XYZ position, width/depth/height, notes, and ID
+- Fixture models are rendered in the room wireframe and included in JSON save/load/import/export records
+- Live 3D Euclidean distance between the first two synthetic measurement points
 - Built-in checks for volume, unit conversion, 3D point distance, point bounds, session schema, and serialization
 - Honest status panel linking to the Unity build instructions and status
 
