@@ -5,6 +5,7 @@ on:
     paths:
       - "web/**"
       - "tools/test_browser_simulator.mjs"
+      - "tools/test_browser_playwright.mjs"
       - ".github/workflows/test-browser-simulator.yml"
   pull_request:
     paths:
@@ -32,3 +33,14 @@ jobs:
           grep -q 'id="runTests"' web/index.html
           grep -q 'simulationOnly:true' web/index.html
           grep -q 'Quest 3' web/index.html
+      - name: Install Chromium test dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Serve simulator and run real-browser tests
+        run: |
+          python3 -m http.server 4173 --directory web > /tmp/roomscan-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          node tools/test_browser_playwright.mjs
