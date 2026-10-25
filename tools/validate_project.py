@@ -37,8 +37,18 @@ controller = controller_path.read_text(encoding="utf-8") if controller_path.exis
 for symbol in ("RoomScanSession.Instance", "StartScanAsync", "FinalizeScanAsync", "LoadLatestAsync"):
     if symbol not in controller:
         errors.append(f"Runtime controller is missing expected integration call: {symbol}")
-if "TODO:" in controller:
-    errors.append("Runtime controller still contains TODO placeholders.")
+# Scan all first-party C# source files, not just the main controller.
+cs_files = [
+    p for p in (ROOT / "Unity/Assets").rglob("*.cs")
+    if not any(part in {"Library", "Temp", "Obj", "Build", "Builds"} for part in p.parts)
+]
+todo_files = []
+for cs_path in cs_files:
+    source = cs_path.read_text(encoding="utf-8", errors="replace")
+    if "TODO:" in source or "TODO(" in source:
+        todo_files.append(str(cs_path.relative_to(ROOT)))
+if todo_files:
+    errors.append("C# TODO placeholders remain: " + ", ".join(todo_files))
 
 build = build_path.read_text(encoding="utf-8") if build_path.exists() else ""
 for symbol in ("BuildPipeline.BuildPlayer", "RoomScanSession", "RoomScanner", "RoomScanRuntimeController", "AndroidArchitecture.ARM64", "com.and14122001.orroomscanstudio"):
