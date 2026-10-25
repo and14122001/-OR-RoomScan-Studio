@@ -3,9 +3,11 @@ import vm from "node:vm";
 import assert from "node:assert/strict";
 
 const html = fs.readFileSync("web/index.html", "utf8");
-const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
-assert.ok(scriptMatch, "inline application script exists");
-new vm.Script(scriptMatch[1], { filename: "web/index.html:inline-script" });
+const scriptMatch = [null, fs.readFileSync("web/app.js", "utf8")];
+assert.ok(scriptMatch[1], "external application script exists");
+assert.ok(html.includes('href="./styles.css"'), "external stylesheet is linked");
+assert.ok(html.includes('src="./app.js" defer'), "external application script is linked");
+new vm.Script(scriptMatch[1], { filename: "web/app.js" });
 
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML ids are unique");
