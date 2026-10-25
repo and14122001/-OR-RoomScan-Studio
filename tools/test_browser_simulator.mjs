@@ -128,7 +128,7 @@ const roomGeometryEnd = scriptMatch[1].indexOf("\nfunction pointDistance", roomG
 assert.ok(roomGeometryStart >= 0 && roomGeometryEnd > roomGeometryStart, "room boundary geometry validators exist");
 const roomGeometrySource = scriptMatch[1].slice(roomGeometryStart, roomGeometryEnd);
 const roomGeometryCtx = { room: { w: 4, l: 6 } };
-vm.runInNewContext("function polygonArea(poly){return Math.abs(poly.reduce((s,p,i)=>{const q=poly[(i+1)%poly.length];return s+p.x*q.y-q.x*p.y},0)/2)}\\n" + roomGeometrySource + ";globalThis.parseRoomPolygon=parseRoomPolygon;globalThis.polygonSelfIntersects=polygonSelfIntersects;", roomGeometryCtx);
+vm.runInNewContext("function polygonArea(poly){return Math.abs(poly.reduce((s,p,i)=>{const q=poly[(i+1)%poly.length];return s+p.x*q.y-q.x*p.y},0)/2)}\n" + roomGeometrySource + ";globalThis.parseRoomPolygon=parseRoomPolygon;globalThis.polygonSelfIntersects=polygonSelfIntersects;", roomGeometryCtx);
 assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\n4,0\n4,6\n0,6").length, 4, "valid rectangular room boundary is accepted");
 assert.equal(roomGeometryCtx.parseRoomPolygon("0,0\n4,0\n3,2\n0,2").length, 4, "valid concave/angled footprint is accepted");
 assert.throws(() => roomGeometryCtx.parseRoomPolygon("0,0\n4,4\n0,4\n4,0"), /自交|重疊/, "bow-tie room boundary is rejected");
