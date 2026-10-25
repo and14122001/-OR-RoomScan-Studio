@@ -4,7 +4,7 @@ This folder contains a standalone browser simulation companion for the Unity/Que
 
 ## Run
 
-Open `index.html` in a modern browser. No dependencies, server, API key, login, or paid service is required. The page works offline after the file is available locally.
+Open `index.html` in a modern browser. The core room simulator needs no server, API key, login, or paid service. **PDF import is an exception:** PDF.js is loaded from a CDN, so an internet connection is required when using PDF features unless the library is already cached. Other features may work offline when the page and required assets are available locally.
 
 ## Features
 
@@ -31,6 +31,15 @@ Run the built-in `執行測試` panel in the browser. The repository also includ
 2. Under **Build and deployment**, set **Source** to **GitHub Actions** and save.
 3. Open **Actions → Deploy Browser Virtual Lab** and re-run the latest workflow, or push a later change under `web/`.
 4. The current deployment URL is https://and14122001.github.io/-OR-RoomScan-Studio/. The latest successful deploy is listed in GitHub Actions.
+
+## PDF import and 2D-to-3D tracing (prototype)
+- Load a PDF and select a page; PDF.js renders vector or scanned pages in the browser. The PDF.js library and worker are loaded from a CDN, so PDF functionality requires internet access unless the assets are already cached.
+- Detects candidate long horizontal/vertical raster lines. Select a candidate baseline and enter its verified real-world length to calculate scale. Multiple baseline measurements are cross-checked; estimates differing by more than 2% are rejected, and consistent estimates are averaged.
+- Optionally snap traced points toward nearby high-contrast edges. This is a heuristic and may snap to text, dimensions, or unrelated lines; inspect every point.
+- Manually trace a closed footprint (up to 50 vertices), undo/close it, set extrusion height and XYZ placement, and create an editable 3D prism. The model records source PDF filename/page and can be saved in session JSON.
+- Polygon checks calculate area/perimeter and reject self-intersections or invalid/degenerate contours.
+- Plan, elevation, and section calibration records can be saved for reference. **They are not automatically matched or fused into a single 3D model.** Candidate-line detection is raster-based and primarily horizontal/vertical; it does not semantically identify walls, doors, windows, dimension annotations, or slanted walls, and it does not infer missing depth/height. Verify all dimensions manually.
+- The original PDF bytes are not embedded in the exported session; retain the source PDF separately.
 
 ## CAD 2D-to-3D import (prototype)
 - Import ASCII DXF files containing closed `LWPOLYLINE` outlines.
