@@ -124,7 +124,7 @@ console.log("PASS: DXF closed-polyline parsing, mm-to-m conversion, footprint ve
 
 
 const roomGeometryStart = scriptMatch[1].indexOf("function orient2d(");
-const roomGeometryEnd = scriptMatch[1].indexOf("\\nfunction pointDistance", roomGeometryStart);
+const roomGeometryEnd = scriptMatch[1].indexOf("\nfunction pointDistance", roomGeometryStart);
 assert.ok(roomGeometryStart >= 0 && roomGeometryEnd > roomGeometryStart, "room boundary geometry validators exist");
 const roomGeometrySource = scriptMatch[1].slice(roomGeometryStart, roomGeometryEnd);
 const roomGeometryCtx = { room: { w: 4, l: 6 } };
