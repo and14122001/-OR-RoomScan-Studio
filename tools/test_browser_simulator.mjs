@@ -37,7 +37,7 @@ const polyMath = {};
 vm.runInNewContext(areaSource + ";globalThis.area=polygonArea;", polyMath);
 assert.equal(polyMath.area([{x:0,y:0},{x:4,y:0},{x:3,y:2},{x:0,y:2}]), 7, "non-rectangular polygon area should be 7 m²");
 assert.ok(html.includes("平面斜角牆") && html.includes("立面斜坡另行建模"), "plan-angled wall and vertical-profile slope are distinguished");
-assert.ok(html.includes("pdfjsLib.getDocument"), "PDF.js loads PDF documents");
+assert.ok(scriptMatch[1].includes("pdfjsLib.getDocument"), "PDF.js loads PDF documents");
 assert.ok(scriptMatch[1].includes("PDF-traced"), "PDF traced geometry retains source provenance");
 assert.ok(scriptMatch[1].includes("x:ox,y:oy,z:oz,w,d,h:height,vertices"), "PDF page coordinates are normalized and placed at the user-defined origin");
 assert.ok(html.includes('id="pdfSnapEdges"'), "PDF tracing exposes optional edge snapping control");
@@ -56,7 +56,7 @@ assert.ok(scriptMatch[1].includes("metrics.area.toFixed(3)"), "PDF build report 
 
 assert.ok(scriptMatch[1].includes("pdfMetersPerPx"), "PDF workflow requires scale calibration");
 assert.ok(scriptMatch[1].includes("pdfPoly.length>=50"), "PDF outline vertex count is bounded");
-assert.ok(html.includes("pdf.worker.min.js"), "PDF.js worker is configured");
+assert.ok(scriptMatch[1].includes("pdf.worker.min.js"), "PDF.js worker is configured");
 const math = { room: { w: 4, l: 6, h: 2.5 } };
 vm.runInNewContext(volumeSource + "\n" + distanceSource[0], math);
 assert.equal(math.volume(), 60, "default room volume should be 60 m³");
