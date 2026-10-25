@@ -1,6 +1,6 @@
 # OR RoomScan Studio — Browser Virtual Lab
 
-This folder contains a standalone browser simulation companion for the Unity/Quest 3 project.
+This folder contains a browser simulation companion for the Unity/Quest 3 project. The interface, styling, and application logic are separated into `index.html`, `styles.css`, and `app.js`.
 
 ## Run
 
@@ -25,7 +25,7 @@ This simulator does not access Quest 3 passthrough, Meta Scene API, spatial anch
 
 ## Validation
 
-Run the built-in `執行測試` panel in the browser. The repository also includes a dependency-free Node.js check: run `node tools/test_browser_simulator.mjs` from the repository root. The independent `Browser Simulator Tests` workflow runs this check on GitHub Actions. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
+Run the built-in `執行測試` panel in the browser. The repository includes a dependency-free Node.js logic/source check (`node tools/test_browser_simulator.mjs`) and a Playwright Chromium smoke test (`node tools/test_browser_playwright.mjs`, after installing Playwright and Chromium). GitHub Actions runs both. The independent `Browser Simulator Tests` workflow runs this check on GitHub Actions. Passing these checks validates only browser-side logic; Unity compilation and physical Quest 3 tests remain separate acceptance gates.
 
 ## Publish a free hosted preview
 
