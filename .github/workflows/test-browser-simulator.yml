@@ -11,6 +11,7 @@ on:
     paths:
       - "web/**"
       - "tools/test_browser_simulator.mjs"
+      - "tools/test_browser_playwright.mjs"
       - ".github/workflows/test-browser-simulator.yml"
   workflow_dispatch:
 permissions:
