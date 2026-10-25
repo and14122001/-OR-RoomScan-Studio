@@ -35,7 +35,19 @@ function initPoints(){points=defaults().map(p=>({...p}));renderPoints();draw()}
 function validDims(){let w=+$('width').value,l=+$('length').value,h=+$('height').value;if(![w,l,h].every(Number.isFinite)||w<1||w>30||l<1||l>30||h<1||h>10){log('尺寸無效：寬／長 1–30 m，高 1–10 m。');return false}room={w,l,h};points.forEach(p=>{p.x=Math.min(room.w,Math.max(0,p.x));p.y=Math.min(room.l,Math.max(0,p.y));p.z=Math.min(room.h,Math.max(0,p.z))});return true}
 function polygonArea(poly){return Math.abs(poly.reduce((s,p,i)=>{const q=poly[(i+1)%poly.length];return s+p.x*q.y-q.x*p.y},0)/2)}
 function volume(){return polygonArea(room.polygon||[{x:0,y:0},{x:room.w,y:0},{x:room.w,y:room.l},{x:0,y:room.l}])*room.h}
-function parseRoomPolygon(text){const rows=text.trim().split(/\r?\n/).filter(s=>s.trim());if(rows.length<3||rows.length>50)throw Error('牆段頂點須為 3–50 個');const poly=rows.map((row,i)=>{const a=row.split(/[;,\s]+/).filter(Boolean);if(a.length!==2)throw Error('第 '+(i+1)+' 行須為 X,Y');const x=Number(a[0]),y=Number(a[1]);if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>room.w||y>room.l)throw Error('第 '+(i+1)+' 行座標無效或超出房間寬長範圍');return{x,y}});if(new Set(poly.map(p=>p.x+','+p.y)).size!==poly.length)throw Error('牆段頂點不可重複');if(polygonArea(poly)<.1)throw Error('輪廓面積太小');return poly}
+function orient2d(a,b,c){return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x)}
+function segmentsIntersect(a,b,c,d,eps=1e-9){
+ const o1=orient2d(a,b,c),o2=orient2d(a,b,d),o3=orient2d(c,d,a),o4=orient2d(c,d,b);
+ const on=(p,q,r)=>Math.abs(orient2d(p,q,r))<=eps&&r.x>=Math.min(p.x,q.x)-eps&&r.x<=Math.max(p.x,q.x)+eps&&r.y>=Math.min(p.y,q.y)-eps&&r.y<=Math.max(p.y,q.y)+eps;
+ if(((o1>eps&&o2< -eps)||(o1< -eps&&o2>eps))&&((o3>eps&&o4< -eps)||(o3< -eps&&o4>eps)))return true;
+ return on(a,b,c)||on(a,b,d)||on(c,d,a)||on(c,d,b);
+}
+function polygonSelfIntersects(poly){
+ for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];if(Math.hypot(a.x-b.x,a.y-b.y)<1e-6)return true;
+  for(let j=i+1;j<poly.length;j++){if(j===i||(j+1)%poly.length===i||(i+1)%poly.length===j)continue;const c=poly[j],d=poly[(j+1)%poly.length];if(segmentsIntersect(a,b,c,d))return true}
+ }return false;
+}
+function parseRoomPolygon(text){const rows=text.trim().split(/\\r?\\n/).filter(s=>s.trim());if(rows.length<3||rows.length>50)throw Error('牆段頂點須為 3–50 個');const poly=rows.map((row,i)=>{const a=row.split(/[;,\\s]+/).filter(Boolean);if(a.length!==2)throw Error('第 '+(i+1)+' 行須為 X,Y');const x=Number(a[0]),y=Number(a[1]);if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>room.w||y>room.l)throw Error('第 '+(i+1)+' 行座標無效或超出房間寬長範圍');return{x,y}});if(new Set(poly.map(p=>p.x+','+p.y)).size!==poly.length)throw Error('牆段頂點不可重複');if(polygonSelfIntersects(poly))throw Error('輪廓存在自交或重疊牆段，請調整頂點順序');if(polygonArea(poly)<.1)throw Error('輪廓面積太小');return poly}
 function pointDistance(a,b){return Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z)}
 function log(s){$('message').textContent='['+new Date().toLocaleTimeString()+'] '+s}
 function renderPoints(){$('pointCount').textContent=points.length;$('pointDistance').textContent=(points.length>1?pointDistance(points[0],points[1]):0).toFixed(3);$('pointSummary').textContent=points.length+' points';$('pointList').textContent=points.map((p,i)=>'P'+(i+1)+'  X '+p.x.toFixed(3)+'  Y '+p.y.toFixed(3)+'  Z '+p.z.toFixed(3)).join('\n');$('volume').textContent=volume().toFixed(2)}
