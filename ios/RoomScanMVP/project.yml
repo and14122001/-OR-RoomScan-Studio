@@ -1,0 +1,23 @@
+name: ORRoomScan
+options:
+  bundleIdPrefix: com.orroomscan
+  deploymentTarget:
+    iOS: "17.0"
+targets:
+  ORRoomScan:
+    type: application
+    platform: iOS
+    sources:
+      - path: ORRoomScanApp.swift
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: "用於掃描房間幾何與建立 3D 模型"
+        INFOPLIST_KEY_UIApplicationSupportsDocumentBrowser: NO
+        CODE_SIGN_STYLE: Automatic
+        PRODUCT_BUNDLE_IDENTIFIER: com.orroomscan.devicecapture
+    dependencies:
+      - sdk: RoomPlan.framework
+      - sdk: ARKit.framework

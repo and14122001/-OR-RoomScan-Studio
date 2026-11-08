@@ -1,0 +1,63 @@
+name: OR RoomScan iPhone unsigned IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: or-roomscan-ios-manual-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-ios:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain versions
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        working-directory: ios/RoomScanMVP
+        run: xcodegen generate
+
+      - name: Compile unsigned device app
+        working-directory: ios/RoomScanMVP
+        run: |
+          set -o pipefail
+          xcodebuild -project ORRoomScan.xcodeproj -scheme ORRoomScan -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/ORRoomScanDerived" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            clean build 2>&1 | tee "$RUNNER_TEMP/orroomscan-build.log"
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          APP="$RUNNER_TEMP/ORRoomScanDerived/Build/Products/Release-iphoneos/ORRoomScan.app"
+          test -d "$APP"
+          mkdir -p "$RUNNER_TEMP/orroomscan-package/Payload"
+          cp -R "$APP" "$RUNNER_TEMP/orroomscan-package/Payload/"
+          cd "$RUNNER_TEMP/orroomscan-package"
+          zip -qry "$RUNNER_TEMP/ORRoomScan-unsigned.ipa" Payload
+          unzip -t "$RUNNER_TEMP/ORRoomScan-unsigned.ipa"
+
+      - name: Upload IPA and build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ORRoomScan-iPhone-build
+          path: |
+            ${{ runner.temp }}/ORRoomScan-unsigned.ipa
+            ${{ runner.temp }}/orroomscan-build.log
+          if-no-files-found: warn
+          retention-days: 7
