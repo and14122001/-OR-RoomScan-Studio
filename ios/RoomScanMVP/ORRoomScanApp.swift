@@ -16,6 +16,7 @@ final class CaptureModel: NSObject, ObservableObject, RoomCaptureViewDelegate {
     @Published var scanning = false
     @Published var lastExport: URL?
     @Published var lastError: String?
+    @Published var savedScans: [URL] = []
 
     // A shared ARSession is the foundation for the next mesh/RGB milestone.
     let arSession = ARSession()
@@ -24,6 +25,21 @@ final class CaptureModel: NSObject, ObservableObject, RoomCaptureViewDelegate {
         view.delegate = self
         return view
     }()
+
+    override init() {
+        super.init()
+        refreshSavedScans()
+    }
+
+    func refreshSavedScans() {
+        let base = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("ORScans", isDirectory: true)
+        let folders = (try? FileManager.default.contentsOfDirectory(at: base, includingPropertiesForKeys: nil)) ?? []
+        savedScans = folders.compactMap { folder in
+            let url = folder.appendingPathComponent("room.usdz")
+            return FileManager.default.fileExists(atPath: url.path) ? url : nil
+        }.sorted { $0.path > $1.path }
+    }
 
     func start() {
         guard RoomCaptureSession.isSupported else {
@@ -81,6 +97,7 @@ final class CaptureModel: NSObject, ObservableObject, RoomCaptureViewDelegate {
             let processedJSON = try JSONEncoder().encode(processedResult)
             try processedJSON.write(to: folder.appendingPathComponent("roomplan-processed.json"), options: .atomic)
             lastExport = destination
+            refreshSavedScans()
             status = "掃描完成，USDZ、結構 JSON 與原始資料已保存"
         } catch {
             lastError = error.localizedDescription
@@ -110,7 +127,19 @@ struct CaptureScreen: View {
                 Text(error).foregroundStyle(.red).font(.caption)
             }
             if let url = model.lastExport {
-                ShareLink("分享掃描 USDZ", item: url)
+                ShareLink("分享本次掃描 USDZ", item: url)
+            }
+            if !model.savedScans.isEmpty {
+                Text("已保存掃描").font(.subheadline)
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(model.savedScans, id: \.self) { url in
+                            ShareLink(item: url) {
+                                Label("分享 " + url.deletingLastPathComponent().lastPathComponent.prefix(8), systemImage: "square.and.arrow.up")
+                            }
+                        }
+                    }
+                }
             }
             Button(model.scanning ? "完成掃描" : "開始掃描") {
                 if model.scanning { model.finish() } else { model.start() }
