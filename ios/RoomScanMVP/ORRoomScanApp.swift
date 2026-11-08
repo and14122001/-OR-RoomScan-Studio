@@ -135,7 +135,7 @@ struct CaptureScreen: View {
                     HStack {
                         ForEach(model.savedScans, id: \.self) { url in
                             ShareLink(item: url) {
-                                Label("分享 " + url.deletingLastPathComponent().lastPathComponent.prefix(8), systemImage: "square.and.arrow.up")
+                                Label("分享 " + String(url.deletingLastPathComponent().lastPathComponent.prefix(8)), systemImage: "square.and.arrow.up")
                             }
                         }
                     }
