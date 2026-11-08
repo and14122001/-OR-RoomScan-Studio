@@ -32,6 +32,7 @@ final class CaptureModel: NSObject, ObservableObject, RoomCaptureViewDelegate {
         }
         lastError = nil
         lastExport = nil
+        currentFolder = nil
         captureView.captureSession.run(configuration: RoomCaptureSession.Configuration())
         scanning = true
         status = "掃描中，請緩慢移動"
@@ -77,8 +78,10 @@ final class CaptureModel: NSObject, ObservableObject, RoomCaptureViewDelegate {
             }
             let destination = folder.appendingPathComponent("room.usdz")
             try processedResult.export(to: destination)
+            let processedJSON = try JSONEncoder().encode(processedResult)
+            try processedJSON.write(to: folder.appendingPathComponent("roomplan-processed.json"), options: .atomic)
             lastExport = destination
-            status = "掃描完成，USDZ 與原始資料已保存"
+            status = "掃描完成，USDZ、結構 JSON 與原始資料已保存"
         } catch {
             lastError = error.localizedDescription
             status = "匯出失敗"
